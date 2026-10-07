@@ -1,0 +1,192 @@
+/* About Page Styles */
+.about-page {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Hero Section */
+.about-hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.05)" points="0,1000 1000,0 1000,1000"/></svg>');
+  background-size: cover;
+}
+
+.min-vh-50 {
+  min-height: 50vh;
+}
+
+.hero-image {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+/* Mission Section */
+.mission-content {
+  line-height: 1.8;
+}
+
+.mission-content p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+/* Stats Section */
+.stat-card {
+  background: white;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Values Section */
+.value-card {
+  background: white;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
+}
+
+.value-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.value-icon {
+  transition: transform 0.3s ease;
+}
+
+.value-card:hover .value-icon {
+  transform: scale(1.1);
+}
+
+/* Team Section */
+.team-card {
+  background: white;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
+}
+
+.team-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.team-image img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.team-card:hover .team-image img {
+  transform: scale(1.05);
+}
+
+.social-links a {
+  transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+  color: #667eea !important;
+  transform: translateY(-2px);
+}
+
+/* CTA Section */
+.bg-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .display-4 {
+    font-size: 2.5rem;
+  }
+  
+  .display-5 {
+    font-size: 2rem;
+  }
+  
+  .btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .team-image img {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Image Styling */
+.img-fluid {
+  border-radius: 15px;
+}
+
+/* List Styling */
+.list-unstyled li {
+  padding: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+/* Button Hover Effects */
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Text Colors */
+.text-primary {
+  color: #667eea !important;
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+/* Section Spacing */
+
+@media (max-width: 576px) {
+  section {
+    padding: 2rem 0;
+  }
+}

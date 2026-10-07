@@ -1,0 +1,450 @@
+/* Vocabulary Collections Styles */
+.vocabulary-collections-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.collections-header {
+  text-align: center;
+  padding: 60px 0 40px;
+  color: white;
+  position: relative;
+}
+
+/* .header-content-vocabulary {
+  margin-top: 5rem;
+} */
+
+.header-content-vocabulary h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  background: linear-gradient(45deg, #fff, #f0f0f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: 5rem;
+}
+
+.header-content-vocabulary p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.header-badge {
+  margin-top: 20px;
+}
+
+.header-badge span {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 20px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.collections-filters-section {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.filters-container {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.search-box-wrapper {
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-box {
+  position: relative;
+  width: 100%;
+}
+
+.search-box i {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 12px 16px 12px 44px;
+  border: none;
+  border-radius: 12px;
+  background: white;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.filter-select-wrapper {
+  position: relative;
+  min-width: 200px;
+}
+
+.level-filter-select {
+  width: 100%;
+  padding: 12px 44px 12px 16px;
+  border: none;
+  border-radius: 12px;
+  background: white;
+  font-size: 1rem;
+  appearance: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.filter-select-wrapper i {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  pointer-events: none;
+}
+
+.collections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+  margin-bottom: 60px;
+}
+
+.collection-card {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.collection-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.card-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.collection-level-badge {
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.collection-level-badge.beginner {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+.collection-level-badge.intermediate {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.collection-level-badge.advanced {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.collection-category-badge {
+  background: #f0f0f0;
+  color: #666;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+.active-learning-badge {
+  background: #4caf50;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.card-body {
+  margin-bottom: 24px;
+}
+
+.collection-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.collection-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.collection-description {
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.progress-section {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.progress-percent {
+  font-weight: 700;
+  color: #4caf50;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4caf50, #8bc34a);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.stats-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.collection-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.meta-item i {
+  color: #667eea;
+}
+
+.card-footer {
+  display: flex;
+  gap: 12px;
+}
+
+.study-btn,
+.preview-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.study-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+}
+
+.study-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.preview-btn {
+  background: transparent;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.preview-btn:hover {
+  background: #667eea;
+  color: white;
+}
+
+.no-collections-found {
+  text-align: center;
+  padding: 80px 20px;
+  color: white;
+}
+
+.no-collections-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.7;
+}
+
+.no-collections-found h3 {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.no-collections-found p {
+  opacity: 0.8;
+}
+
+.collections-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+}
+
+.info-icon {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+
+.info-content h4 {
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.info-content p {
+  opacity: 0.9;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .collections-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-container {
+    flex-direction: column;
+  }
+
+  .search-box-wrapper {
+    max-width: 100%;
+  }
+
+  .header-content-vocabulary h1 {
+    font-size: 2rem;
+  }
+
+  .card-footer {
+    flex-direction: column;
+  }
+}
+
+/* Vocabulary preview */
+.fade-in {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.exam-preview-card{
+  margin-top: 8rem;
+}
+
+.exam-preview-card h1 {
+  font-weight: 700;
+}
+
+.card-header.bg-gradient {
+  background: linear-gradient(135deg, #007bff, #00bcd4);
+}
+
+.rules-section ul li {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.rules-section ul li i {
+  font-size: 1.1rem;
+}
+
+.vocabulary-preview{
+  margin-top: 5rem !important;
+  padding: 20px !important;
+}

@@ -1,0 +1,138 @@
+/* Course List Styles */
+.course-list-container {
+  margin-top: 5rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Course Card Styles */
+.course-card {
+  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+.course-image {
+  overflow: hidden;
+}
+
+.course-image img {
+  transition: transform 0.3s ease;
+}
+
+.course-card:hover .course-image img {
+  transform: scale(1.05);
+}
+
+.course-overlay {
+  background: rgba(0,0,0,0.7);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.course-card:hover .course-overlay {
+  opacity: 1;
+}
+
+/* Featured Badge */
+.featured-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+}
+
+/* Text Clamp Utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Filter Sidebar */
+.sticky-top {
+  position: sticky;
+  z-index: 100;
+}
+
+/* Navigation Links in Sidebar */
+.nav-link {
+  transition: all 0.2s ease;
+  margin-bottom: 2px;
+}
+
+.nav-link:hover {
+  background-color: #e9ecef !important;
+  color: #495057 !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .course-card {
+    margin-bottom: 1.5rem;
+  }
+  
+  .display-5 {
+    font-size: 2rem;
+  }
+}
+
+/* Price Styling */
+.price-section {
+  line-height: 1.2;
+}
+
+/* Progress Bar */
+.progress {
+  background-color: #e9ecef;
+  border-radius: 10px;
+}
+
+.progress-bar {
+  border-radius: 10px;
+}
+
+/* Badge Styles */
+.badge {
+  font-size: 0.75em;
+  font-weight: 500;
+}
+
+/* Hero Section */
+.bg-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+/* Loading Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.course-card {
+  animation: fadeIn 0.5s ease;
+}

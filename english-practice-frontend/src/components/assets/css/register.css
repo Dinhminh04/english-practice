@@ -1,0 +1,88 @@
+/* Thêm vào file CSS chính */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.blur-3 {
+  filter: blur(40px);
+  opacity: 0.7;
+}
+
+.card {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.card-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-outline-primary:hover:not(:disabled),
+.btn-outline-danger:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.input-group-text {
+  transition: all 0.3s ease;
+}
+
+.input-group:focus-within .input-group-text {
+  background-color: #667eea;
+  color: white;
+}
+
+/* Password strength indicator */
+.password-strength {
+  height: 4px;
+  border-radius: 2px;
+  margin-top: 5px;
+  transition: all 0.3s ease;
+}
+
+.strength-weak { background-color: #dc3545; width: 25%; }
+.strength-fair { background-color: #ffc107; width: 50%; }
+.strength-good { background-color: #17a2b8; width: 75%; }
+.strength-strong { background-color: #28a745; width: 100%; }
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .card-body {
+    padding: 1.5rem !important;
+  }
+  
+  .btn-lg {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* Animation for form elements */
+.form-control {
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  transform: translateY(-1px);
+}
+
+/* Custom checkbox */
+.form-check-input:checked {
+  background-color: #667eea;
+  border-color: #667eea;
+}
