@@ -66,7 +66,7 @@ Admins manage users, exams, grammar lessons and vocabulary from a dashboard, and
 | Layer | Technology |
 |---|---|
 | Frontend | React 19, React Router 6, Bootstrap 5, Chart.js, Axios |
-| Backend | Node.js, Express 5, Passport.js, JWT, bcrypt, Multer, Nodemailer |
+| Backend | Node.js, Express 5, Passport.js, JWT, bcrypt,  |
 | Database | MySQL (mysql2) |
 | AI | Google Gemini API |
 
