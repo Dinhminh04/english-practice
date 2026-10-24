@@ -2,7 +2,6 @@
 
 An English learning web app with grammar lessons, vocabulary flashcards, exams and an AI tutor that chats with learners, grades their speaking and points out their weak areas.
 
-> Graduation thesis project — Bachelor of Information Technology, University of Technology and Management (UTM), 2026.
 
 ## Description
 
