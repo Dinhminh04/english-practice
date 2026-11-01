@@ -6,7 +6,7 @@ const About = () => {
   const teamMembers = [
     {
       id: 1,
-      name: "Nguyễn Minh Anh",
+      name: "Nguyễn Đình Minh",
       position: "Founder & CEO",
       bio: "Chuyên gia ngôn ngữ học với 10 năm kinh nghiệm giảng dạy tiếng Anh",
       image: "https://vcdn1-english.vnecdn.net/2024/11/18/1-1731922651-1731922672-3493-1731922680.jpg?w=500&h=300&q=100&dpr=2&fit=crop&s=rVmUD42NLo16wrYOMUXQkQ",

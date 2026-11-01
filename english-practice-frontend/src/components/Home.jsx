@@ -279,8 +279,8 @@ const Home = ({ isAuthenticated, userRole, userId }) => {
                   <span><i className="fas fa-user-graduate" aria-hidden="true"></i></span>
                 </div>
                 <div className="author-info">
-                  <h4>Nguyễn Minh Anh</h4>
-                  <p>Sinh viên ĐH Ngoại Thương</p>
+                  <h4>Nguyễn Đình Minh</h4>
+                  <p>Sinh viên Đại học</p>
                   <div className="author-rating"><i className="fas fa-star" aria-hidden="true"></i><i className="fas fa-star" aria-hidden="true"></i><i className="fas fa-star" aria-hidden="true"></i><i className="fas fa-star" aria-hidden="true"></i><i className="fas fa-star" aria-hidden="true"></i></div>
                 </div>
               </div>

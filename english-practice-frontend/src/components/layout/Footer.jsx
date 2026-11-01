@@ -156,7 +156,7 @@ const Footer = () => {
                 </div>
                 
                 <div className="copyright">
-                  <p>&copy; 2025 <strong>EnglishMaster</strong>. Tất cả các quyền được bảo lưu.</p>
+                  <p>&copy; 2026 <strong>EnglishMaster</strong>. Tất cả các quyền được bảo lưu.</p>
                   <div className="legal-links">
                     <Link to="/privacy">Bảo mật</Link>
                     <span className="divider">•</span>
