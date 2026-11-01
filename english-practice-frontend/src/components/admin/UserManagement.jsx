@@ -38,7 +38,7 @@ const UserManagement = ({ handleLogout }) => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/admin/users", {
+      const response = await axios.get("/api/admin/users", {
         headers: { Authorization: `Bearer ${token}` },
         params: { page: currentPage, limit: 10, search, role, is_verified: isVerified },
       });
@@ -56,12 +56,12 @@ const UserManagement = ({ handleLogout }) => {
     try {
       const token = localStorage.getItem("token");
       if (editingUser) {
-        await axios.put(`http://localhost:5000/api/admin/users/${editingUser.id}`, userForm, {
+        await axios.put(`/api/admin/users/${editingUser.id}`, userForm, {
           headers: { Authorization: `Bearer ${token}` },
         });
         toast.success("Người dùng đã được cập nhật");
       } else {
-        await axios.post("http://localhost:5000/api/admin/users", userForm, {
+        await axios.post("/api/admin/users", userForm, {
           headers: { Authorization: `Bearer ${token}` },
         });
         toast.success("Người dùng đã được tạo");
@@ -96,7 +96,7 @@ const UserManagement = ({ handleLogout }) => {
       if (result.isConfirmed) {
         try {
           const token = localStorage.getItem("token");
-          await axios.delete(`http://localhost:5000/api/admin/users/${user.id}`, {
+          await axios.delete(`/api/admin/users/${user.id}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           toast.success("Người dùng đã được xóa");
@@ -112,7 +112,7 @@ const UserManagement = ({ handleLogout }) => {
   const togglePremiumStatus = async (user) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.patch(`http://localhost:5000/api/admin/users/${user.id}/premium`, { isPremium: !user.is_premium }, {
+      await axios.patch(`/api/admin/users/${user.id}/premium`, { isPremium: !user.is_premium }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success("Trạng thái premium đã được cập nhật");

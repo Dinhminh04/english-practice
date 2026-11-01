@@ -59,7 +59,7 @@ const ExamManagement = ({ handleLogout }) => {
   const fetchExams = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/exams", {
+      const response = await axios.get("/api/exams", {
         headers: { Authorization: `Bearer ${token}` },
         params: {
           page: currentPage,
@@ -80,7 +80,7 @@ const ExamManagement = ({ handleLogout }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:5000/api/exams/${examId}`,
+        `/api/exams/${examId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -99,7 +99,7 @@ const ExamManagement = ({ handleLogout }) => {
 
       if (editingExam) {
         await axios.put(
-          `http://localhost:5000/api/exams/${editingExam.id}`,
+          `/api/exams/${editingExam.id}`,
           examForm,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -107,7 +107,7 @@ const ExamManagement = ({ handleLogout }) => {
         );
         toast.success("Đề thi đã được cập nhật");
       } else {
-        await axios.post("http://localhost:5000/api/exams", examForm, {
+        await axios.post("/api/exams", examForm, {
           headers: { Authorization: `Bearer ${token}` },
         });
         toast.success("Đề thi đã được tạo");
@@ -172,7 +172,7 @@ const ExamManagement = ({ handleLogout }) => {
       let response;
       if (editingQuestion) {
         response = await axios.put(
-          `http://localhost:5000/api/exams/questions/${editingQuestion.id}`,
+          `/api/exams/questions/${editingQuestion.id}`,
           formData,
           {
             headers: {
@@ -185,7 +185,7 @@ const ExamManagement = ({ handleLogout }) => {
       } else {
         formData.append("exam_id", currentExam.id);
         response = await axios.post(
-          `http://localhost:5000/api/exams/${currentExam.id}/questions`,
+          `/api/exams/${currentExam.id}/questions`,
           formData,
           {
             headers: {
@@ -240,7 +240,7 @@ const ExamManagement = ({ handleLogout }) => {
       if (result.isConfirmed) {
         try {
           const token = localStorage.getItem("token");
-          await axios.delete(`http://localhost:5000/api/exams/${id}`, {
+          await axios.delete(`/api/exams/${id}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           toast.success("Đề thi đã được xóa");
@@ -268,7 +268,7 @@ const ExamManagement = ({ handleLogout }) => {
         try {
           const token = localStorage.getItem("token");
           await axios.delete(
-            `http://localhost:5000/api/exams/questions/${id}`,
+            `/api/exams/questions/${id}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }

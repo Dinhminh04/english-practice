@@ -32,7 +32,7 @@ const GrammarTopic = {
       ORDER BY gt.display_order ASC, gt.created_at DESC
       LIMIT ? OFFSET ?
     `;
-    const [rows] = await pool.execute(sql, [limit, offset]);
+    const [rows] = await pool.query(sql, [limit, offset]);
     return rows;
   },
 
@@ -170,7 +170,7 @@ const GrammarLesson = {
       params.push(filters.limit, filters.offset);
     }
 
-    const [rows] = await pool.execute(sql, params);
+    const [rows] = await pool.query(sql, params);
     return rows;
   },
 

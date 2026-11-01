@@ -52,7 +52,7 @@ const Register = () => {
 
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
+      const res = await axios.post("/api/auth/register", {
         email,
         phone: phone || undefined,
         password,
@@ -71,12 +71,12 @@ const Register = () => {
 
   // Xử lý đăng ký với Google hoặc Facebook
   const handleGoogleRegister = () => {
-    window.location.href = "http://localhost:5000/api/auth/google";
+    window.location.href = "/api/auth/google";
   };
 
   // Xử lý đăng ký với Facebook
   const handleFacebookRegister = () => {
-    window.location.href = "http://localhost:5000/api/auth/facebook";
+    window.location.href = "/api/auth/facebook";
   };
 
   return (

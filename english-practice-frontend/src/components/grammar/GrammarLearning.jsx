@@ -281,11 +281,11 @@ const QuizResult = ({ result, lesson, quiz, onRetry, onNext, onAnalyze, analysis
   const percentage = Math.round(result.score);
   
   const getPerformanceMessage = () => {
-    if (percentage >= 90) return "Xuất sắc! 🎉";
-    if (percentage >= 80) return "Rất tốt! 👍";
-    if (percentage >= 70) return "Tốt! 👏";
-    if (percentage >= 60) return "Đạt yêu cầu ✅";
-    return "Cần ôn tập thêm 💪";
+    if (percentage >= 90) return <>Xuất sắc! <i className="fas fa-champagne-glasses" aria-hidden="true"></i></>;
+    if (percentage >= 80) return <>Rất tốt! <i className="fas fa-thumbs-up" aria-hidden="true"></i></>;
+    if (percentage >= 70) return <>Tốt! <i className="fas fa-hands-clapping" aria-hidden="true"></i></>;
+    if (percentage >= 60) return <>Đạt yêu cầu <i className="fas fa-circle-check" aria-hidden="true"></i></>;
+    return <>Cần ôn tập thêm <i className="fas fa-dumbbell" aria-hidden="true"></i></>;
   };
 
   const getPerformanceColor = () => {

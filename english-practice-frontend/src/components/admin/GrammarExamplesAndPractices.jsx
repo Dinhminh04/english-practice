@@ -61,7 +61,7 @@ const GrammarExamplesAndPractices = ({ lessonId, lessonTitle }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:5000/api/grammar/examples?lesson_id=${lessonId}`,
+        `/api/grammar/examples?lesson_id=${lessonId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -79,7 +79,7 @@ const GrammarExamplesAndPractices = ({ lessonId, lessonTitle }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:5000/api/grammar/practices?lesson_id=${lessonId}`,
+        `/api/grammar/practices?lesson_id=${lessonId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -104,7 +104,7 @@ const GrammarExamplesAndPractices = ({ lessonId, lessonTitle }) => {
 
       if (editingExample) {
         await axios.put(
-          `http://localhost:5000/api/grammar/examples/${editingExample.id}`,
+          `/api/grammar/examples/${editingExample.id}`,
           formData,
           {
             headers: {
@@ -116,7 +116,7 @@ const GrammarExamplesAndPractices = ({ lessonId, lessonTitle }) => {
         toast.success("Ví dụ đã được cập nhật");
       } else {
         await axios.post(
-          "http://localhost:5000/api/grammar/examples",
+          "/api/grammar/examples",
           formData,
           {
             headers: {
@@ -157,7 +157,7 @@ const GrammarExamplesAndPractices = ({ lessonId, lessonTitle }) => {
 
       if (editingPractice) {
         await axios.put(
-          `http://localhost:5000/api/grammar/practices/${editingPractice.id}`,
+          `/api/grammar/practices/${editingPractice.id}`,
           practiceData,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -166,7 +166,7 @@ const GrammarExamplesAndPractices = ({ lessonId, lessonTitle }) => {
         toast.success("Bài thực hành đã được cập nhật");
       } else {
         await axios.post(
-          "http://localhost:5000/api/grammar/practices",
+          "/api/grammar/practices",
           practiceData,
           {
             headers: { Authorization: `Bearer ${token}` },

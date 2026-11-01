@@ -1,0 +1,118 @@
+/* ==========================================================================
+   Icon colors (Font Awesome)
+   Each icon gets a semantic color via the --ic custom property. The color is
+   only applied inside the wrappers listed below, which sit on light or dark
+   backgrounds where a vivid color is readable. Icons on purple gradients and
+   inside buttons keep their inherited (white) color.
+   ========================================================================== */
+
+/* ---- Semantic palette -------------------------------------------------- */
+i.fa-house { --ic: #3498db; }
+i.fa-book { --ic: #e74c3c; }
+i.fa-book-open { --ic: #27ae60; }
+i.fa-font { --ic: #8e44ad; }
+i.fa-pen, i.fa-pen-to-square { --ic: #e67e22; }
+i.fa-users { --ic: #16a085; }
+i.fa-user, i.fa-user-graduate, i.fa-user-tie { --ic: #3498db; }
+i.fa-chalkboard-user, i.fa-person-chalkboard { --ic: #6c5ce7; }
+i.fa-bullseye { --ic: #e84393; }
+i.fa-chart-column, i.fa-chart-line { --ic: #00b894; }
+i.fa-bolt { --ic: #f39c12; }
+i.fa-graduation-cap { --ic: #6c5ce7; }
+i.fa-trophy { --ic: #f1c40f; }
+i.fa-microphone { --ic: #e84393; }
+i.fa-headphones { --ic: #5f27cd; }
+i.fa-comments, i.fa-comment-dots { --ic: #0abde3; }
+i.fa-stopwatch, i.fa-clock { --ic: #ff6b6b; }
+i.fa-briefcase { --ic: #a0522d; }
+i.fa-circle-check, i.fa-check { --ic: #2ecc71; }
+i.fa-circle-question { --ic: #f39c12; }
+i.fa-xmark, i.fa-right-from-bracket, i.fa-location-dot { --ic: #e74c3c; }
+i.fa-rotate, i.fa-eye, i.fa-paper-plane, i.fa-envelope { --ic: #3498db; }
+i.fa-lock, i.fa-dumbbell { --ic: #e67e22; }
+i.fa-music { --ic: #e84393; }
+i.fa-triangle-exclamation { --ic: #f1c40f; }
+i.fa-building, i.fa-wrench { --ic: #5d6d7e; }
+i.fa-phone { --ic: #2ecc71; }
+i.fa-mobile-screen-button { --ic: #9b59b6; }
+i.fa-credit-card { --ic: #2980b9; }
+i.fa-building-columns { --ic: #8e44ad; }
+i.fa-link, i.fa-diagram-project { --ic: #16a085; }
+i.fa-camera { --ic: #636e72; }
+i.fa-thumbs-up { --ic: #3498db; }
+i.fa-hands-clapping { --ic: #f39c12; }
+i.fa-champagne-glasses { --ic: #f1c40f; }
+i.fa-star { --ic: #ffc107; }
+i.fa-earth-asia, i.fa-seedling { --ic: #27ae60; }
+i.fa-newspaper { --ic: #7f8c8d; }
+i.fa-shuffle { --ic: #3498db; }
+i.fa-masks-theater { --ic: #9b59b6; }
+
+/* ---- Wrappers on light backgrounds: apply the semantic color ----------- */
+.navbar .nav-icon i,
+.navbar .item-icon i,
+.navbar .logo-icon i,
+.stat-icon i,
+.meta-icon i,
+.empty-icon i,
+.course-card i,
+.lesson-duration i,
+.tab-button:not(.active) .tab-icon i,
+.profile-container .icon i {
+  color: var(--ic, currentColor);
+}
+
+/* Navbar logo: bigger and a touch of glow */
+.navbar .logo-icon i { filter: drop-shadow(0 2px 4px rgba(232, 67, 147, 0.35)); }
+
+/* Soft pop on hover for stat / exam cards */
+.stat-card:hover .stat-icon i,
+.stat-item:hover .stat-icon i {
+  transform: scale(1.15) rotate(-6deg);
+}
+.stat-icon i { transition: transform 0.25s ease; }
+
+/* ---- Footer (dark blue gradient): bright colors ------------------------ */
+.footer .title-icon i,
+.footer .contact-icon i,
+.footer .payment-icon i {
+  color: var(--ic, currentColor);
+  filter: brightness(1.25) saturate(1.1);
+}
+.footer .logo-icon i { color: #ffd166; }
+.footer .social-icon i { color: #fff; }
+.footer .social-icon:hover i { color: #ffd166; }
+.footer .social-icon:has(.fa-facebook-f) i { color: #6ea8ff; }
+.footer .social-icon:has(.fa-youtube) i { color: #ff6b6b; }
+.footer .social-icon:has(.fa-instagram) i { color: #ff8fb8; }
+.footer .social-icon:has(.fa-tiktok) i { color: #7ee8fa; }
+
+/* ---- Home: hero (purple) ---------------------------------------------- */
+.hero-badge i,
+.hero-section .card-icon i,
+.hero-section .emoji i { color: #ffd166; }
+.hero-section .emoji i { font-size: 1.1em; }
+
+/* Home: feature icon boxes get a different gradient each */
+.feature-card:nth-child(6n + 1) .feature-icon-wrapper { background: linear-gradient(135deg, #667eea, #764ba2); box-shadow: 0 8px 20px rgba(118, 75, 162, 0.35); }
+.feature-card:nth-child(6n + 2) .feature-icon-wrapper { background: linear-gradient(135deg, #ff6b6b, #ee5a24); box-shadow: 0 8px 20px rgba(238, 90, 36, 0.35); }
+.feature-card:nth-child(6n + 3) .feature-icon-wrapper { background: linear-gradient(135deg, #00b894, #00cec9); box-shadow: 0 8px 20px rgba(0, 184, 148, 0.35); }
+.feature-card:nth-child(6n + 4) .feature-icon-wrapper { background: linear-gradient(135deg, #fdcb6e, #f39c12); box-shadow: 0 8px 20px rgba(243, 156, 18, 0.35); }
+.feature-card:nth-child(6n + 5) .feature-icon-wrapper { background: linear-gradient(135deg, #0984e3, #74b9ff); box-shadow: 0 8px 20px rgba(9, 132, 227, 0.35); }
+.feature-card:nth-child(6n + 6) .feature-icon-wrapper { background: linear-gradient(135deg, #e84393, #fd79a8); box-shadow: 0 8px 20px rgba(232, 67, 147, 0.35); }
+.feature-icon-wrapper .feature-icon { color: #fff; }
+
+/* Home: course cards */
+.course-icon i { font-size: 1em; }
+
+/* ---- Grammar topic cards: rotate the header gradient ------------------- */
+.topic-card:nth-child(5n + 2) .topic-header { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); }
+.topic-card:nth-child(5n + 3) .topic-header { background: linear-gradient(135deg, #00b894 0%, #00cec9 100%); }
+.topic-card:nth-child(5n + 4) .topic-header { background: linear-gradient(135deg, #0984e3 0%, #6c5ce7 100%); }
+.topic-card:nth-child(5n + 5) .topic-header { background: linear-gradient(135deg, #e84393 0%, #fd79a8 100%); }
+
+/* ---- Vocabulary info cards (translucent on gradient): gold ------------- */
+.info-icon i { color: #ffd166; }
+
+/* ---- Search / clear buttons keep a neutral tone ------------------------ */
+.search-icon i { color: #6c757d; }

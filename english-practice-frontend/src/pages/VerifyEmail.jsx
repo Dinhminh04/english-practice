@@ -12,7 +12,7 @@ const VerifyEmail = () => {
       return;
     }
 
-    fetch(`http://localhost:5000/api/auth/verify-email?token=${token}`)
+    fetch(`/api/auth/verify-email?token=${token}`)
       .then(async res => {
         const text = await res.text();
         setHtml(text);

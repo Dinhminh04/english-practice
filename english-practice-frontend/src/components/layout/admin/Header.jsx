@@ -51,7 +51,7 @@ const Header = ({ toggleSidebar, toggleSidebarOpen, handleLogout, user }) => {
                   <img
                     src={
                       user && user.avatar
-                        ? `http://localhost:5000${user.avatar}`
+                        ? `${user.avatar}`
                         : defaultAvatar
                     }
                     alt="..."
@@ -76,7 +76,7 @@ const Header = ({ toggleSidebar, toggleSidebarOpen, handleLogout, user }) => {
                         <img
                           src={
                             user && user.avatar
-                              ? `http://localhost:5000${user.avatar}`
+                              ? `${user.avatar}`
                               : defaultAvatar
                           }
                           alt="image profile"

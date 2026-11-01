@@ -108,7 +108,7 @@ const VocabularyCollections = ({ isAuthenticated }) => {
             <p>Hệ thống Spaced Repetition giúp bạn ghi nhớ từ vựng hiệu quả và lâu dài</p>
           </div>
           <div className="header-badge">
-            <span>🎯 Phương pháp khoa học</span>
+            <span><i className="fas fa-bullseye" aria-hidden="true"></i> Phương pháp khoa học</span>
           </div>
         </div>
 
@@ -171,7 +171,7 @@ const VocabularyCollections = ({ isAuthenticated }) => {
                       </div>
                       {isAuthenticated && stats.learning > 0 && (
                         <div className="active-learning-badge">
-                          📚 Đang học
+                          <i className="fas fa-book" aria-hidden="true"></i> Đang học
                         </div>
                       )}
                     </div>
@@ -255,21 +255,21 @@ const VocabularyCollections = ({ isAuthenticated }) => {
         {/* Info Section */}
         <div className="collections-info pb-5">
           <div className="info-card">
-            <div className="info-icon">🎯</div>
+            <div className="info-icon"><i className="fas fa-bullseye" aria-hidden="true"></i></div>
             <div className="info-content">
               <h4>Phương pháp Spaced Repetition</h4>
               <p>Học từ vựng đúng thời điểm để ghi nhớ lâu dài với thuật toán thông minh</p>
             </div>
           </div>
           <div className="info-card">
-            <div className="info-icon">📊</div>
+            <div className="info-icon"><i className="fas fa-chart-column" aria-hidden="true"></i></div>
             <div className="info-content">
               <h4>Theo dõi tiến độ</h4>
               <p>Biết được từ nào bạn đã thuộc và từ nào cần ôn tập thêm</p>
             </div>
           </div>
           <div className="info-card">
-            <div className="info-icon">⚡</div>
+            <div className="info-icon"><i className="fas fa-bolt" aria-hidden="true"></i></div>
             <div className="info-content">
               <h4>Học mọi lúc mọi nơi</h4>
               <p>Truy cập trên mọi thiết bị, học offline và đồng bộ khi có kết nối</p>

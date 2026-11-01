@@ -80,18 +80,18 @@ const GrammarList = () => {
   // Hàm lấy icon theo chủ đề
   const getTopicIcon = (topicTitle) => {
     const icons = {
-      'Tenses': '⏰',
-      'Verbs': '🔤',
-      'Nouns': '📝',
-      'Adjectives': '🎯',
-      'Adverbs': '⚡',
-      'Prepositions': '📍',
-      'Conjunctions': '🔗',
-      'Articles': '📰',
-      'Passive Voice': '🔀',
-      'Conditionals': '🎭',
-      'Reported Speech': '💬',
-      'Relative Clauses': '⛓️'
+      'Tenses': 'fa-clock',
+      'Verbs': 'fa-font',
+      'Nouns': 'fa-pen-to-square',
+      'Adjectives': 'fa-bullseye',
+      'Adverbs': 'fa-bolt',
+      'Prepositions': 'fa-location-dot',
+      'Conjunctions': 'fa-link',
+      'Articles': 'fa-newspaper',
+      'Passive Voice': 'fa-shuffle',
+      'Conditionals': 'fa-masks-theater',
+      'Reported Speech': 'fa-comments',
+      'Relative Clauses': 'fa-diagram-project'
     };
     
     for (const [key, icon] of Object.entries(icons)) {
@@ -100,7 +100,7 @@ const GrammarList = () => {
       }
     }
     
-    return '📚';
+    return 'fa-book';
   };
 
   const filteredTopics = topics.filter(topic => {
@@ -145,14 +145,14 @@ const GrammarList = () => {
             </div>
             <div className="header-stats">
               <div className="stat-card">
-                <div className="stat-icon">📚</div>
+                <div className="stat-icon"><i className="fas fa-book" aria-hidden="true"></i></div>
                 <div className="stat-content">
                   <div className="stat-number">{topics.length}</div>
                   <div className="stat-label">Chủ đề</div>
                 </div>
               </div>
               <div className="stat-card">
-                <div className="stat-icon">📖</div>
+                <div className="stat-icon"><i className="fas fa-book-open" aria-hidden="true"></i></div>
                 <div className="stat-content">
                   <div className="stat-number">{getTotalLessons()}</div>
                   <div className="stat-label">Bài học</div>
@@ -166,7 +166,7 @@ const GrammarList = () => {
         <div className="filters-section">
           <div className="search-filter">
             <div className="search-box">
-              <span className="search-icon">🔍</span>
+              <span className="search-icon"><i className="fas fa-magnifying-glass" aria-hidden="true"></i></span>
               <input
                 type="text"
                 placeholder="Tìm kiếm chủ đề hoặc bài học..."
@@ -179,7 +179,7 @@ const GrammarList = () => {
                   className="clear-search"
                   onClick={() => setSearchTerm('')}
                 >
-                  ✕
+                  <i className="fas fa-xmark" aria-hidden="true"></i>
                 </button>
               )}
             </div>
@@ -209,7 +209,7 @@ const GrammarList = () => {
                   setDifficultyFilter('');
                 }}
               >
-                🔄 Xóa bộ lọc
+                <i className="fas fa-rotate" aria-hidden="true"></i> Xóa bộ lọc
               </button>
             </div>
           </div>
@@ -229,7 +229,7 @@ const GrammarList = () => {
         <div className="topics-grid">
           {filteredTopics.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-icon">📚</div>
+              <div className="empty-icon"><i className="fas fa-book" aria-hidden="true"></i></div>
               <h3>Không tìm thấy chủ đề phù hợp</h3>
               <p>Hãy thử thay đổi từ khóa tìm kiếm hoặc điều chỉnh bộ lọc</p>
               <button 
@@ -239,7 +239,7 @@ const GrammarList = () => {
                   setDifficultyFilter('');
                 }}
               >
-                🔄 Xóa bộ lọc
+                <i className="fas fa-rotate" aria-hidden="true"></i> Xóa bộ lọc
               </button>
             </div>
           ) : (
@@ -247,13 +247,13 @@ const GrammarList = () => {
               <div key={topic.id} className="topic-card">
                 <div className="topic-header">
                   <div className="topic-icon">
-                    {getTopicIcon(topic.title)}
+                    <i className={`fas ${getTopicIcon(topic.title)}`} aria-hidden="true"></i>
                   </div>
                   <div className="topic-info">
                     <h3 className="topic-title">{topic.title}</h3>
                     <div class="topic-meta">
                       <span class="lessons-count">
-                        📖 {topic.lessons?.length || 0} bài học
+                        <i className="fas fa-book-open" aria-hidden="true"></i> {topic.lessons?.length || 0} bài học
                       </span>
                       {topic.difficulties && topic.difficulties.length > 0 && (
                         <div className="difficulty-badges">
@@ -296,7 +296,7 @@ const GrammarList = () => {
                                   </span>
                                 )}
                                 {lesson.duration && (
-                                  <span className="lesson-duration">⏱️ {lesson.duration} phút</span>
+                                  <span className="lesson-duration"><i className="fas fa-stopwatch" aria-hidden="true"></i> {lesson.duration} phút</span>
                                 )}
                               </div>
                             </div>
@@ -305,7 +305,7 @@ const GrammarList = () => {
                                 to={`/grammar/learn/${lesson.id}`} 
                                 className="btn-primary lesson-btn"
                               >
-                                <span className="btn-icon">🚀</span>
+                                <span className="btn-icon"><i className="fas fa-rocket" aria-hidden="true"></i></span>
                                 Học ngay
                               </Link>
                               {lesson.exercise_count > 0 && (
@@ -313,7 +313,7 @@ const GrammarList = () => {
                                   to={`/grammar/practice/${lesson.id}`} 
                                   className="btn-outline practice-btn"
                                 >
-                                  <span className="btn-icon">💪</span>
+                                  <span className="btn-icon"><i className="fas fa-dumbbell" aria-hidden="true"></i></span>
                                   Luyện tập
                                 </Link>
                               )}
@@ -324,7 +324,7 @@ const GrammarList = () => {
                     </div>
                   ) : (
                     <div className="no-lessons">
-                      <span className="no-lessons-icon">📝</span>
+                      <span className="no-lessons-icon"><i className="fas fa-pen-to-square" aria-hidden="true"></i></span>
                       <p>Chủ đề này chưa có bài học nào.</p>
                     </div>
                   )}
@@ -355,7 +355,7 @@ const GrammarList = () => {
           <div className="quick-stats">
             <div className="stats-grid">
               <div className="stat-card">
-                <div className="stat-icon">🎯</div>
+                <div className="stat-icon"><i className="fas fa-bullseye" aria-hidden="true"></i></div>
                 <div className="stat-content">
                   <div className="stat-number">
                     {filteredTopics.reduce((acc, topic) => acc + (topic.completed_lessons || 0), 0)}
@@ -364,7 +364,7 @@ const GrammarList = () => {
                 </div>
               </div>
               <div className="stat-card">
-                <div className="stat-icon">⏱️</div>
+                <div className="stat-icon"><i className="fas fa-stopwatch" aria-hidden="true"></i></div>
                 <div className="stat-content">
                   <div className="stat-number">
                     {filteredTopics.reduce((acc, topic) => 
@@ -375,7 +375,7 @@ const GrammarList = () => {
                 </div>
               </div>
               <div className="stat-card">
-                <div className="stat-icon">💪</div>
+                <div className="stat-icon"><i className="fas fa-dumbbell" aria-hidden="true"></i></div>
                 <div className="stat-content">
                   <div className="stat-number">
                     {filteredTopics.reduce((acc, topic) => 

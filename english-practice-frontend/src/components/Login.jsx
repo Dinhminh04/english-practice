@@ -46,7 +46,7 @@ const Login = ({ setAuth, setUserRole, setUserId }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        "/api/auth/login",
         formData
       );
       handleLoginSuccess(res.data.token, res.data.user.role, res.data.user.id);
@@ -59,12 +59,12 @@ const Login = ({ setAuth, setUserRole, setUserId }) => {
 
   // Xử lý đăng nhập với Google
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:5000/api/auth/google";
+    window.location.href = "/api/auth/google";
   };
 
   // Xử lý đăng nhập với Facebook
   const handleFacebookLogin = () => {
-    window.location.href = "http://localhost:5000/api/auth/facebook";
+    window.location.href = "/api/auth/facebook";
   };
 
   // Kiểm tra token trong URL khi component được mount

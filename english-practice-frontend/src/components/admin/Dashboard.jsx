@@ -42,7 +42,7 @@ const Dashboard = ({ handleLogout }) => {
           setLoading(true);
           const token = localStorage.getItem("token");
           const response = await axios.get(
-            "http://localhost:5000/api/admin/users/stats",
+            "/api/admin/users/stats",
             {
               headers: {
                 Authorization: `Bearer ${token}`,

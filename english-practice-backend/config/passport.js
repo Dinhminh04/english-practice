@@ -4,7 +4,8 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 const User = require("../models/userModel");
 
 // Google Strategy
-// Google Strategy
+// Google Strategy (skipped when credentials are not configured)
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 passport.use(
   new GoogleStrategy(
     {
@@ -56,8 +57,10 @@ passport.use(
     }
   )
 );
+}
 
-// Facebook Strategy
+// Facebook Strategy (skipped when credentials are not configured)
+if (process.env.FACEBOOK_APP_ID && process.env.FACEBOOK_APP_SECRET) {
 passport.use(
   new FacebookStrategy(
     {
@@ -115,3 +118,4 @@ passport.use(
     }
   )
 );
+}

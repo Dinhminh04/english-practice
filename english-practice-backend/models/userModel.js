@@ -181,7 +181,7 @@ const User = {
   `;
 
     const dataParams = [...params, parseInt(limit), offset];
-    const [users] = await pool.execute(dataQuery, dataParams);
+    const [users] = await pool.query(dataQuery, dataParams);
 
     return {
       users,

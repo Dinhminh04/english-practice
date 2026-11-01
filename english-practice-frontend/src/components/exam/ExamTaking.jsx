@@ -179,7 +179,7 @@ const ExamTaking = () => {
     return (
       <div className="exam-taking-container">
         <div className="empty-exam">
-          <div className="empty-icon">📝</div>
+          <div className="empty-icon"><i className="fas fa-pen-to-square" aria-hidden="true"></i></div>
           <h2>{exam.title}</h2>
           <p>Đề thi này hiện chưa có câu hỏi.</p>
           <button onClick={() => navigate("/exams")} className="btn-primary">
@@ -203,11 +203,11 @@ const ExamTaking = () => {
               <h1 className="exam-title">{exam.title}</h1>
               <div className="exam-meta">
                 <span className="meta-item">
-                  <span className="meta-icon">📊</span>
+                  <span className="meta-icon"><i className="fas fa-chart-column" aria-hidden="true"></i></span>
                   {exam.questions.length} câu hỏi
                 </span>
                 <span className="meta-item">
-                  <span className="meta-icon">🎯</span>
+                  <span className="meta-icon"><i className="fas fa-bullseye" aria-hidden="true"></i></span>
                   {getAnsweredCount()}/{exam.questions.length} đã trả lời
                 </span>
               </div>
@@ -215,7 +215,7 @@ const ExamTaking = () => {
 
             <div className="exam-controls">
               <div className={`timer ${getTimeStatus()}`}>
-                <div className="timer-icon">⏱️</div>
+                <div className="timer-icon"><i className="fas fa-stopwatch" aria-hidden="true"></i></div>
                 <div className="timer-content">
                   <div className="timer-text">Thời gian còn lại</div>
                   <div className="timer-display">
@@ -248,7 +248,7 @@ const ExamTaking = () => {
                   </>
                 ) : (
                   <>
-                    <span className="btn-icon">📤</span>
+                    <span className="btn-icon"><i className="fas fa-paper-plane" aria-hidden="true"></i></span>
                     Nộp bài
                   </>
                 )}
@@ -282,7 +282,7 @@ const ExamTaking = () => {
                 >
                   <span className="question-number">{index + 1}</span>
                   {answers[q.id] !== undefined && (
-                    <span className="answer-indicator">✓</span>
+                    <span className="answer-indicator"><i className="fas fa-check" aria-hidden="true"></i></span>
                   )}
                 </button>
               ))}
@@ -346,11 +346,11 @@ const ExamTaking = () => {
                   {question.audio_url && (
                     <div className="audio-player">
                       <div className="audio-header">
-                        <span className="audio-icon">🎵</span>
+                        <span className="audio-icon"><i className="fas fa-music" aria-hidden="true"></i></span>
                         <span>Audio</span>
                       </div>
                       <audio controls className="audio-element">
-                        <source src={`http://localhost:5000${question.audio_url}`} type="audio/mpeg" />
+                        <source src={`${question.audio_url}`} type="audio/mpeg" />
                         Trình duyệt của bạn không hỗ trợ phát audio.
                       </audio>
                     </div>
@@ -359,7 +359,7 @@ const ExamTaking = () => {
                   {question.image_url && (
                     <div className="question-image">
                       <img 
-                        src={`http://localhost:5000${question.image_url}`} 
+                        src={`${question.image_url}`} 
                         alt="Minh họa câu hỏi" 
                         className="image-element"
                       />
@@ -403,7 +403,7 @@ const ExamTaking = () => {
                   
                   {safeOptions.length === 0 && (
                     <div className="no-options">
-                      <span className="no-options-icon">⚠️</span>
+                      <span className="no-options-icon"><i className="fas fa-triangle-exclamation" aria-hidden="true"></i></span>
                       <p>Không có lựa chọn nào cho câu hỏi này.</p>
                     </div>
                   )}

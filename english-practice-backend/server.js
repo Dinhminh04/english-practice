@@ -1,4 +1,6 @@
 const express = require("express");
+const fs = require("fs");
+const path = require("path");
 const cors = require("cors");
 const passport = require("passport");
 const session = require("express-session");
@@ -16,6 +18,17 @@ const speakingRoutes = require("./routes/speakingRoutes"); // Thêm import
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Multer does not create its destination folders, so make sure they exist
+[
+  "uploads/audio",
+  "uploads/images",
+  "uploads/avatars",
+  "uploads/temp",
+  "uploads/grammar/audio",
+  "uploads/grammar/images",
+  "uploads/grammar/temp",
+].forEach((dir) => fs.mkdirSync(path.join(__dirname, dir), { recursive: true }));
 
 // Middleware
 app.use(

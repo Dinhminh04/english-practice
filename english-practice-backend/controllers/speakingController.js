@@ -3,7 +3,7 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const getSpeakingTopic = async (req, res) => {
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite" });
 
     const prompt = `[Bạn là một giáo viên tiếng Anh] Tạo một chủ đề ngẫu nhiên để luyện nói bằng tiếng Anh. Chủ đề nên thú vị và không quá phức tạp. Chỉ trả về chủ đề, không có gì khác.`;
 
@@ -32,7 +32,7 @@ const evaluateSpeaking = async (req, res) => {
 
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite" });
 
     const prompt = `[Bạn là một giám khảo chấm thi nói tiếng Anh]
     Chủ đề: "${topic}"

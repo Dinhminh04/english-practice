@@ -23,7 +23,7 @@ const FlashcardStudy = ({ isAuthenticated }) => {
     if (audioPath.startsWith("http")) {
       return audioPath;
     }
-    return `http://localhost:5000${audioPath}`;
+    return `${audioPath}`;
   };
 
   // Tải bộ thẻ và tiến độ học

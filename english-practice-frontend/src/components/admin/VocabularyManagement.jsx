@@ -80,7 +80,7 @@ const VocabularyManagement = ({ handleLogout }) => {
       if (filters.category) params.append("category", filters.category);
 
       const response = await axios.get(
-        `http://localhost:5000/api/vocabulary/collections?${params}`,
+        `/api/vocabulary/collections?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -96,7 +96,7 @@ const VocabularyManagement = ({ handleLogout }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:5000/api/vocabulary/flashcards?collection_id=${collectionId}`,
+        `/api/vocabulary/flashcards?collection_id=${collectionId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -112,7 +112,7 @@ const VocabularyManagement = ({ handleLogout }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:5000/api/vocabulary/questions?collection_id=${collectionId}`,
+        `/api/vocabulary/questions?collection_id=${collectionId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -128,7 +128,7 @@ const VocabularyManagement = ({ handleLogout }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:5000/api/vocabulary/search?q=${encodeURIComponent(
+        `/api/vocabulary/search?q=${encodeURIComponent(
           term
         )}`,
         {
@@ -150,7 +150,7 @@ const VocabularyManagement = ({ handleLogout }) => {
 
       if (editingCollection) {
         await axios.put(
-          `http://localhost:5000/api/vocabulary/collections/${editingCollection.id}`,
+          `/api/vocabulary/collections/${editingCollection.id}`,
           collectionForm,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -159,7 +159,7 @@ const VocabularyManagement = ({ handleLogout }) => {
         toast.success("Bộ từ vựng đã được cập nhật");
       } else {
         await axios.post(
-          "http://localhost:5000/api/vocabulary/collections",
+          "/api/vocabulary/collections",
           collectionForm,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -221,7 +221,7 @@ const VocabularyManagement = ({ handleLogout }) => {
 
       if (editingFlashcard) {
         await axios.put(
-          `http://localhost:5000/api/vocabulary/flashcards/${editingFlashcard.id}`,
+          `/api/vocabulary/flashcards/${editingFlashcard.id}`,
           formData,
           {
             headers: {
@@ -233,7 +233,7 @@ const VocabularyManagement = ({ handleLogout }) => {
         toast.success("Flashcard đã được cập nhật");
       } else {
         await axios.post(
-          "http://localhost:5000/api/vocabulary/flashcards",
+          "/api/vocabulary/flashcards",
           formData,
           {
             headers: {
@@ -276,7 +276,7 @@ const VocabularyManagement = ({ handleLogout }) => {
 
       if (editingQuestion) {
         await axios.put(
-          `http://localhost:5000/api/vocabulary/questions/${editingQuestion.id}`,
+          `/api/vocabulary/questions/${editingQuestion.id}`,
           questionForm,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -285,7 +285,7 @@ const VocabularyManagement = ({ handleLogout }) => {
         toast.success("Câu hỏi đã được cập nhật");
       } else {
         await axios.post(
-          "http://localhost:5000/api/vocabulary/questions",
+          "/api/vocabulary/questions",
           { ...questionForm, collection_id: currentCollection.id },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -326,7 +326,7 @@ const VocabularyManagement = ({ handleLogout }) => {
         try {
           const token = localStorage.getItem("token");
           await axios.delete(
-            `http://localhost:5000/api/vocabulary/collections/${id}`,
+            `/api/vocabulary/collections/${id}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -356,7 +356,7 @@ const VocabularyManagement = ({ handleLogout }) => {
         try {
           const token = localStorage.getItem("token");
           await axios.delete(
-            `http://localhost:5000/api/vocabulary/flashcards/${id}`,
+            `/api/vocabulary/flashcards/${id}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -388,7 +388,7 @@ const VocabularyManagement = ({ handleLogout }) => {
         try {
           const token = localStorage.getItem("token");
           await axios.delete(
-            `http://localhost:5000/api/vocabulary/questions/${id}`,
+            `/api/vocabulary/questions/${id}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -555,7 +555,7 @@ const VocabularyManagement = ({ handleLogout }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:5000/api/vocabulary/export/csv?collection_id=${currentCollection.id}`,
+        `/api/vocabulary/export/csv?collection_id=${currentCollection.id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
           responseType: "blob",
@@ -587,7 +587,7 @@ const VocabularyManagement = ({ handleLogout }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:5000/api/vocabulary/dictionary/${dictionarySearchTerm}`,
+        `/api/vocabulary/dictionary/${dictionarySearchTerm}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

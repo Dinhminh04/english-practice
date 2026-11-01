@@ -22,6 +22,7 @@ import AppRoutes from "./routers/AppRoutes";
 import BackToTop from "./components/BackToTop";
 import ChatAI from "./components/ChatAI";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import "./components/assets/css/icon-colors.css";
 
 function AppContent({
   isAuthenticated,

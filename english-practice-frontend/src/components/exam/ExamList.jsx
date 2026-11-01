@@ -24,7 +24,7 @@ const ExamList = ({ isAuthenticated }) => {
   // Lấy bài kiểm tra từ API
   const fetchExams = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/exams");
+      const response = await axios.get("/api/exams");
       setExams(response.data.exams);
       setLoading(false);
     } catch (error) {
@@ -58,13 +58,13 @@ const ExamList = ({ isAuthenticated }) => {
   // Lấy biểu tượng loại đề thi
   const getExamTypeIcon = (type) => {
     const icons = {
-      ielts: "🎓",
-      toeic: "💼",
-      toefl: "🌎",
-      general: "📚",
-      practice: "🔰"
+      ielts: "fa-graduation-cap",
+      toeic: "fa-briefcase",
+      toefl: "fa-earth-asia",
+      general: "fa-book",
+      practice: "fa-seedling"
     };
-    return icons[type] || "📝";
+    return icons[type] || "fa-pen-to-square";
   };
 
   // Lấy nhãn độ khó
@@ -122,7 +122,7 @@ const ExamList = ({ isAuthenticated }) => {
         <div className="filters-section">
           <div className="search-filter">
             <div className="search-box">
-              <span className="search-icon">🔍</span>
+              <span className="search-icon"><i className="fas fa-magnifying-glass" aria-hidden="true"></i></span>
               <input
                 type="text"
                 placeholder="Tìm kiếm đề thi theo tên..."
@@ -135,7 +135,7 @@ const ExamList = ({ isAuthenticated }) => {
                   className="clear-search"
                   onClick={() => setSearchTerm("")}
                 >
-                  ✕
+                  <i className="fas fa-xmark" aria-hidden="true"></i>
                 </button>
               )}
             </div>
@@ -182,7 +182,7 @@ const ExamList = ({ isAuthenticated }) => {
                   setDifficulty("");
                 }}
               >
-                🔄 Xóa bộ lọc
+                <i className="fas fa-rotate" aria-hidden="true"></i> Xóa bộ lọc
               </button>
             </div>
           </div>
@@ -202,7 +202,7 @@ const ExamList = ({ isAuthenticated }) => {
         <div className="exams-grid">
           {filteredExams.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-icon">📚</div>
+              <div className="empty-icon"><i className="fas fa-book" aria-hidden="true"></i></div>
               <h3>Không tìm thấy đề thi phù hợp</h3>
               <p>Hãy thử thay đổi từ khóa tìm kiếm hoặc điều chỉnh bộ lọc</p>
               <button 
@@ -213,7 +213,7 @@ const ExamList = ({ isAuthenticated }) => {
                   setDifficulty("");
                 }}
               >
-                🔄 Xóa bộ lọc
+                <i className="fas fa-rotate" aria-hidden="true"></i> Xóa bộ lọc
               </button>
             </div>
           ) : (
@@ -225,7 +225,7 @@ const ExamList = ({ isAuthenticated }) => {
                   <div className="exam-card-header">
                     <div className="exam-type-badge">
                       <span className="type-icon">
-                        {getExamTypeIcon(exam.exam_type)}
+                        <i className={`fas ${getExamTypeIcon(exam.exam_type)}`} aria-hidden="true"></i>
                       </span>
                       <span className="type-text">
                         {exam.exam_type.toUpperCase()}
@@ -248,15 +248,15 @@ const ExamList = ({ isAuthenticated }) => {
                     
                     <div className="exam-meta">
                       <div className="meta-item">
-                        <span className="meta-icon">⏱️</span>
+                        <span className="meta-icon"><i className="fas fa-stopwatch" aria-hidden="true"></i></span>
                         <span className="meta-text">{exam.duration} phút</span>
                       </div>
                       <div className="meta-item">
-                        <span className="meta-icon">❓</span>
+                        <span className="meta-icon"><i className="fas fa-circle-question" aria-hidden="true"></i></span>
                         <span className="meta-text">{exam.total_questions || 0} câu hỏi</span>
                       </div>
                       <div className="meta-item">
-                        <span className="meta-icon">👥</span>
+                        <span className="meta-icon"><i className="fas fa-users" aria-hidden="true"></i></span>
                         <span className="meta-text">{exam.attempt_count || 0} lượt thi</span>
                       </div>
                     </div>
@@ -278,7 +278,7 @@ const ExamList = ({ isAuthenticated }) => {
                         to={`/exams/${exam.id}/take`}
                         className="btn-primary exam-action"
                       >
-                        <span className="btn-icon">🚀</span>
+                        <span className="btn-icon"><i className="fas fa-rocket" aria-hidden="true"></i></span>
                         Bắt đầu thi
                       </Link>
                     ) : (
@@ -286,7 +286,7 @@ const ExamList = ({ isAuthenticated }) => {
                         to="/login"
                         className="btn-primary exam-action"
                       >
-                        <span className="btn-icon">🔐</span>
+                        <span className="btn-icon"><i className="fas fa-lock" aria-hidden="true"></i></span>
                         Đăng nhập để thi
                       </Link>
                     )}
@@ -296,7 +296,7 @@ const ExamList = ({ isAuthenticated }) => {
                         to={`/exams/${exam.id}/preview`}
                         className="btn-secondary w-100"
                       >
-                        <span className="btn-icon">👁️</span>
+                        <span className="btn-icon"><i className="fas fa-eye" aria-hidden="true"></i></span>
                         Xem trước
                       </Link>
             
@@ -313,7 +313,7 @@ const ExamList = ({ isAuthenticated }) => {
           <div className="quick-stats">
             <div className="stats-grid">
               <div className="stat-card">
-                <div className="stat-icon">📝</div>
+                <div className="stat-icon"><i className="fas fa-pen-to-square" aria-hidden="true"></i></div>
                 <div className="stat-content">
                   <div className="stat-value">
                     {filteredExams.reduce((acc, exam) => acc + (exam.total_questions || 0), 0)}
@@ -322,7 +322,7 @@ const ExamList = ({ isAuthenticated }) => {
                 </div>
               </div>
               <div className="stat-card">
-                <div className="stat-icon">⏱️</div>
+                <div className="stat-icon"><i className="fas fa-stopwatch" aria-hidden="true"></i></div>
                 <div className="stat-content">
                   <div className="stat-value">
                     {filteredExams.reduce((acc, exam) => acc + exam.duration, 0)}
@@ -331,7 +331,7 @@ const ExamList = ({ isAuthenticated }) => {
                 </div>
               </div>
               <div className="stat-card">
-                <div className="stat-icon">👥</div>
+                <div className="stat-icon"><i className="fas fa-users" aria-hidden="true"></i></div>
                 <div className="stat-content">
                   <div className="stat-value">
                     {filteredExams.reduce((acc, exam) => acc + (exam.attempt_count || 0), 0)}

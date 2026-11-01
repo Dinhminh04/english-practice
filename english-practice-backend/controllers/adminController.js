@@ -56,7 +56,7 @@ const adminController = {
       `;
       
       const dataParams = [...params, parseInt(limit), offset];
-      const [users] = await pool.execute(dataQuery, dataParams);
+      const [users] = await pool.query(dataQuery, dataParams);
 
       res.json({
         users,

@@ -45,7 +45,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://localhost:5000/api/user/profile",
+        "/api/user/profile",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -100,7 +100,7 @@ const Profile = () => {
       }
 
       const response = await axios.put(
-        "http://localhost:5000/api/user/profile",
+        "/api/user/profile",
         formData,
         {
           headers: {
@@ -140,7 +140,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        "http://localhost:5000/api/user/change-password",
+        "/api/user/change-password",
         {
           oldPassword: changePw.oldPassword,
           newPassword: changePw.newPassword,
@@ -163,7 +163,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://localhost:5000/api/user/learning-history",
+        "/api/user/learning-history",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -187,7 +187,7 @@ const Profile = () => {
       
       <div className="history-section">
         <h4 className="history-section-title">
-          <span className="icon">📝</span>
+          <span className="icon"><i className="fas fa-pen-to-square" aria-hidden="true"></i></span>
           Lịch sử làm bài thi
         </h4>
         {learningHistory.examHistory.length > 0 ? (
@@ -213,7 +213,7 @@ const Profile = () => {
       
       <div className="history-section">
         <h4 className="history-section-title">
-          <span className="icon">📚</span>
+          <span className="icon"><i className="fas fa-book" aria-hidden="true"></i></span>
           Lịch sử học ngữ pháp
         </h4>
         {learningHistory.grammarHistory.length > 0 ? (
@@ -238,7 +238,7 @@ const Profile = () => {
       
       <div className="history-section">
         <h4 className="history-section-title">
-          <span className="icon">🔤</span>
+          <span className="icon"><i className="fas fa-font" aria-hidden="true"></i></span>
           Lịch sử học từ vựng
         </h4>
         {learningHistory.vocabularyHistory.length > 0 ? (
@@ -272,14 +272,14 @@ const Profile = () => {
             onClick={() => setActiveTab("profile")}
             className={`tab-button ${activeTab === "profile" ? "active" : ""}`}
           >
-            <span className="tab-icon">👤</span>
+            <span className="tab-icon"><i className="fas fa-user" aria-hidden="true"></i></span>
             Thông tin cá nhân
           </button>
           <button
             onClick={() => setActiveTab("history")}
             className={`tab-button ${activeTab === "history" ? "active" : ""}`}
           >
-            <span className="tab-icon">📊</span>
+            <span className="tab-icon"><i className="fas fa-chart-column" aria-hidden="true"></i></span>
             Lịch sử học tập
           </button>
         </div>
@@ -300,18 +300,18 @@ const Profile = () => {
                       src={
                         user.avatar.startsWith("blob:")
                           ? user.avatar
-                          : `http://localhost:5000${user.avatar}`
+                          : `${user.avatar}`
                       }
                       alt="Avatar"
                       className="avatar"
                     />
                   ) : (
                     <div className="no-avatar">
-                      <span className="avatar-placeholder">👤</span>
+                      <span className="avatar-placeholder"><i className="fas fa-user" aria-hidden="true"></i></span>
                     </div>
                   )}
                   <div className="edit-avatar-overlay">
-                    <span className="edit-avatar-icon">📷</span>
+                    <span className="edit-avatar-icon"><i className="fas fa-camera" aria-hidden="true"></i></span>
                   </div>
                 </div>
                 <input

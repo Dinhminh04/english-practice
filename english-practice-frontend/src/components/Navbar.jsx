@@ -15,7 +15,7 @@ const Navbar = ({ isAuthenticated }) => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.get(
-            "http://localhost:5000/api/user/profile",
+            "/api/user/profile",
             { headers: { Authorization: `Bearer ${token}` } }
           );
           setUser(response.data);
@@ -37,12 +37,12 @@ const Navbar = ({ isAuthenticated }) => {
 
   // Các mục điều hướng
   const navItems = [
-    { path: "/", label: "Trang chủ", icon: "🏠" },
-    { path: "/vocabulary-collections", label: "Từ vựng", icon: "📖" },
-    { path: "/grammar", label: "Ngữ pháp", icon: "🔤" },
-    { path: "/exams", label: "Luyện thi", icon: "✍️" },
-    { path: "/courses", label: "Khóa học", icon: "📚" },
-    { path: "/about", label: "Về chúng tôi", icon: "👥" },
+    { path: "/", label: "Trang chủ", icon: "fa-house" },
+    { path: "/vocabulary-collections", label: "Từ vựng", icon: "fa-book-open" },
+    { path: "/grammar", label: "Ngữ pháp", icon: "fa-font" },
+    { path: "/exams", label: "Luyện thi", icon: "fa-pen" },
+    { path: "/courses", label: "Khóa học", icon: "fa-book" },
+    { path: "/about", label: "Về chúng tôi", icon: "fa-users" },
   ];
 
   return (
@@ -54,7 +54,7 @@ const Navbar = ({ isAuthenticated }) => {
           to="/"
           onClick={() => setIsMenuOpen(false)}
         >
-          <div className="logo-icon">🎯</div>
+          <div className="logo-icon"><i className="fas fa-bullseye" aria-hidden="true"></i></div>
           <div className="logo-text">
             <span className="logo-primary">English</span>
             <span className="logo-secondary">Master</span>
@@ -73,7 +73,7 @@ const Navbar = ({ isAuthenticated }) => {
                 }
                 onClick={() => setIsMenuOpen(false)}
               >
-                <span className="nav-icon">{item.icon}</span>
+                <span className="nav-icon"><i className={`fas ${item.icon}`} aria-hidden="true"></i></span>
                 <span className="nav-label">{item.label}</span>
                 <span className="nav-underline"></span>
               </NavLink>
@@ -94,7 +94,7 @@ const Navbar = ({ isAuthenticated }) => {
                 <div className="user-avatar">
                   {user?.avatar ? (
                     <img
-                      src={user.avatar.startsWith("http") ? user.avatar : `http://localhost:5000${user.avatar}`}
+                      src={user.avatar.startsWith("http") ? user.avatar : `${user.avatar}`}
                       alt={user.display_name}
                       className="avatar-image"
                     />
@@ -118,7 +118,7 @@ const Navbar = ({ isAuthenticated }) => {
                       <div className="user-avatar small">
                         {user?.avatar ? (
                           <img
-                            src={user.avatar.startsWith("http") ? user.avatar : `http://localhost:5000${user.avatar}`}
+                            src={user.avatar.startsWith("http") ? user.avatar : `${user.avatar}`}
                             alt={user.display_name}
                             className="avatar-image"
                           />
@@ -145,14 +145,14 @@ const Navbar = ({ isAuthenticated }) => {
                     to="/profile" 
                     className="dropdown-item"
                   >
-                    <span className="item-icon">👤</span>
+                    <span className="item-icon"><i className="fas fa-user" aria-hidden="true"></i></span>
                     <span className="item-text">Hồ sơ cá nhân</span>
                   </Link>
                   <Link 
                     to="/progress-dashboard" 
                     className="dropdown-item"
                   >
-                    <span className="item-icon">📊</span>
+                    <span className="item-icon"><i className="fas fa-chart-column" aria-hidden="true"></i></span>
                     <span className="item-text">Theo dõi tiến độ</span>
                   </Link>
                   
@@ -160,7 +160,7 @@ const Navbar = ({ isAuthenticated }) => {
                     to="/speaking-practice" 
                     className="dropdown-item"
                   >
-                    <span className="item-icon">🎙</span>
+                    <span className="item-icon"><i className="fas fa-microphone" aria-hidden="true"></i></span>
                     <span className="item-text">Luyện nói với AI</span>
                   </Link>
                   
@@ -170,7 +170,7 @@ const Navbar = ({ isAuthenticated }) => {
                     className="dropdown-item logout"
                     onClick={handleLogout}
                   >
-                    <span className="item-icon">🚪</span>
+                    <span className="item-icon"><i className="fas fa-right-from-bracket" aria-hidden="true"></i></span>
                     <span className="item-text">Đăng xuất</span>
                   </button>
                 </div>

@@ -19,7 +19,7 @@ const Footer = () => {
           <div className="footer-main">
             <div className="footer-brand">
               <Link to="/" className="brand-logo">
-                <span className="logo-icon">🎯</span>
+                <span className="logo-icon"><i className="fas fa-bullseye" aria-hidden="true"></i></span>
                 <span className="logo-text">
                   English<span className="logo-highlight">Master</span>
                 </span>
@@ -38,7 +38,7 @@ const Footer = () => {
                   />
                   <button className="newsletter-btn">
                     <span className="btn-text">Đăng ký</span>
-                    <span className="btn-icon">✉️</span>
+                    <span className="btn-icon"><i className="fas fa-envelope" aria-hidden="true"></i></span>
                   </button>
                 </div>
               </div>
@@ -47,7 +47,7 @@ const Footer = () => {
             <div className="footer-links-grid">
               <div className="footer-column">
                 <h3 className="column-title">
-                  <span className="title-icon">🏢</span>
+                  <span className="title-icon"><i className="fas fa-building" aria-hidden="true"></i></span>
                   Về chúng tôi
                 </h3>
                 <ul className="footer-links">
@@ -61,7 +61,7 @@ const Footer = () => {
 
               <div className="footer-column">
                 <h3 className="column-title">
-                  <span className="title-icon">📚</span>
+                  <span className="title-icon"><i className="fas fa-book" aria-hidden="true"></i></span>
                   Khóa học
                 </h3>
                 <ul className="footer-links">
@@ -75,7 +75,7 @@ const Footer = () => {
 
               <div className="footer-column">
                 <h3 className="column-title">
-                  <span className="title-icon">🔧</span>
+                  <span className="title-icon"><i className="fas fa-wrench" aria-hidden="true"></i></span>
                   Hỗ trợ
                 </h3>
                 <ul className="footer-links">
@@ -89,26 +89,26 @@ const Footer = () => {
 
               <div className="footer-column">
                 <h3 className="column-title">
-                  <span className="title-icon">📞</span>
+                  <span className="title-icon"><i className="fas fa-phone" aria-hidden="true"></i></span>
                   Liên hệ
                 </h3>
                 <div className="contact-info">
                   <div className="contact-item">
-                    <span className="contact-icon">📧</span>
+                    <span className="contact-icon"><i className="fas fa-envelope" aria-hidden="true"></i></span>
                     <div>
                       <div className="contact-label">Email</div>
                       <div className="contact-value">support@englishmaster.com</div>
                     </div>
                   </div>
                   <div className="contact-item">
-                    <span className="contact-icon">📱</span>
+                    <span className="contact-icon"><i className="fas fa-mobile-screen-button" aria-hidden="true"></i></span>
                     <div>
                       <div className="contact-label">Hotline</div>
                       <div className="contact-value">1900 1234</div>
                     </div>
                   </div>
                   <div className="contact-item">
-                    <span className="contact-icon">📍</span>
+                    <span className="contact-icon"><i className="fas fa-location-dot" aria-hidden="true"></i></span>
                     <div>
                       <div className="contact-label">Địa chỉ</div>
                       <div className="contact-value">123 Nguyễn Văn Linh, Q.7, TP.HCM</div>
@@ -123,23 +123,23 @@ const Footer = () => {
             <div className="footer-bottom-content">
               <div className="social-links">
                 <a href="#" className="social-link" aria-label="Facebook">
-                  <span className="social-icon">📘</span>
+                  <span className="social-icon"><i className="fab fa-facebook-f" aria-hidden="true"></i></span>
                   <span className="social-text">Facebook</span>
                 </a>
                 <a href="#" className="social-link" aria-label="YouTube">
-                  <span className="social-icon">📺</span>
+                  <span className="social-icon"><i className="fab fa-youtube" aria-hidden="true"></i></span>
                   <span className="social-text">YouTube</span>
                 </a>
                 <a href="#" className="social-link" aria-label="Instagram">
-                  <span className="social-icon">📷</span>
+                  <span className="social-icon"><i className="fab fa-instagram" aria-hidden="true"></i></span>
                   <span className="social-text">Instagram</span>
                 </a>
                 <a href="#" className="social-link" aria-label="TikTok">
-                  <span className="social-icon">🎵</span>
+                  <span className="social-icon"><i className="fab fa-tiktok" aria-hidden="true"></i></span>
                   <span className="social-text">TikTok</span>
                 </a>
                 <a href="#" className="social-link" aria-label="Zalo">
-                  <span className="social-icon">💬</span>
+                  <span className="social-icon"><i className="fas fa-comment-dots" aria-hidden="true"></i></span>
                   <span className="social-text">Zalo</span>
                 </a>
               </div>
@@ -148,10 +148,10 @@ const Footer = () => {
                 <div className="payment-methods">
                   <span className="payment-text">Chấp nhận thanh toán:</span>
                   <div className="payment-icons">
-                    <span className="payment-icon">💳</span>
-                    <span className="payment-icon">🏦</span>
-                    <span className="payment-icon">📱</span>
-                    <span className="payment-icon">🔗</span>
+                    <span className="payment-icon"><i className="fas fa-credit-card" aria-hidden="true"></i></span>
+                    <span className="payment-icon"><i className="fas fa-building-columns" aria-hidden="true"></i></span>
+                    <span className="payment-icon"><i className="fas fa-mobile-screen-button" aria-hidden="true"></i></span>
+                    <span className="payment-icon"><i className="fas fa-link" aria-hidden="true"></i></span>
                   </div>
                 </div>
                 

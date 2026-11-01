@@ -31,7 +31,7 @@ const Layout = ({ children, handleLogout }) => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "http://localhost:5000/api/user/profile",
+          "/api/user/profile",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

@@ -49,7 +49,7 @@ Exam.findAll = async ({ limit, offset, search = "", exam_type = "" }) => {
 
   const queryParams = [...params, limit, offset];
 
-  const [exams] = await db.execute(sql, queryParams);
+  const [exams] = await db.query(sql, queryParams);
   const [countResult] = await db.execute(countSql, params);
 
   return { exams, totalExams: countResult[0].count };

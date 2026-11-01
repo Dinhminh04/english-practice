@@ -66,7 +66,7 @@ const GrammarManagement = ({ handleLogout }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://localhost:5000/api/grammar/topics",
+        "/api/grammar/topics",
         {
           headers: { Authorization: `Bearer ${token}` },
           params: { page: currentTopicPage, limit: topicsPerPage },
@@ -92,7 +92,7 @@ const GrammarManagement = ({ handleLogout }) => {
       params.append("limit", lessonsPerPage);
 
       const response = await axios.get(
-        `http://localhost:5000/api/grammar/lessons?${params}`,
+        `/api/grammar/lessons?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -109,7 +109,7 @@ const GrammarManagement = ({ handleLogout }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:5000/api/grammar/lessons/${lessonId}`,
+        `/api/grammar/lessons/${lessonId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -129,7 +129,7 @@ const GrammarManagement = ({ handleLogout }) => {
 
       if (editingTopic && editingTopic.id) {
         await axios.put(
-          `http://localhost:5000/api/grammar/topics/${editingTopic.id}`,
+          `/api/grammar/topics/${editingTopic.id}`,
           topicForm,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -138,7 +138,7 @@ const GrammarManagement = ({ handleLogout }) => {
         toast.success("Chủ đề đã được cập nhật");
       } else {
         await axios.post(
-          "http://localhost:5000/api/grammar/topics",
+          "/api/grammar/topics",
           topicForm,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -188,7 +188,7 @@ const GrammarManagement = ({ handleLogout }) => {
 
       if (editingLesson) {
         await axios.put(
-          `http://localhost:5000/api/grammar/lessons/${editingLesson.id}`,
+          `/api/grammar/lessons/${editingLesson.id}`,
           formData,
           {
             headers: {
@@ -200,7 +200,7 @@ const GrammarManagement = ({ handleLogout }) => {
         toast.success("Bài học đã được cập nhật");
       } else {
         await axios.post(
-          "http://localhost:5000/api/grammar/lessons",
+          "/api/grammar/lessons",
           formData,
           {
             headers: {
@@ -248,7 +248,7 @@ const GrammarManagement = ({ handleLogout }) => {
       if (result.isConfirmed) {
         try {
           const token = localStorage.getItem("token");
-          await axios.delete(`http://localhost:5000/api/grammar/topics/${id}`, {
+          await axios.delete(`/api/grammar/topics/${id}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           Swal.fire("Đã xóa!", "Chủ đề của bạn đã được xóa.", "success");
@@ -276,7 +276,7 @@ const GrammarManagement = ({ handleLogout }) => {
         try {
           const token = localStorage.getItem("token");
           await axios.delete(
-            `http://localhost:5000/api/grammar/lessons/${id}`,
+            `/api/grammar/lessons/${id}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }

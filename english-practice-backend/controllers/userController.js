@@ -208,7 +208,7 @@ const getWeaknesses = async (req, res) => {
 
     console.log("Calling Gemini API");
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite" });
 
     const prompt = `
       Bạn là một giáo viên tiếng Anh chuyên nghiệp. Hãy phân tích điểm yếu của học sinh dựa trên lịch sử các câu trả lời sai và đưa ra gợi ý học tập cá nhân hóa.

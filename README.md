@@ -2,7 +2,6 @@
 
 An English learning web app with grammar lessons, vocabulary flashcards, exams and an AI tutor that chats with learners, grades their speaking and points out their weak areas.
 
-
 ## Description
 
 ### What the application does
@@ -16,7 +15,7 @@ Learners create an account (or log in with Google / Facebook) and study in four 
 
 After each quiz or exam, the AI analyzes the result and tells the learner which topics they are weak at. A progress dashboard shows their learning history.
 
-Admins and teachers manage users, exams, grammar lessons and vocabulary from an admin dashboard, upload audio and images for questions, and import or export lessons and flashcards as CSV files.
+Admins manage users, exams, grammar lessons and vocabulary from an admin dashboard, upload audio and images for questions, and import or export lessons and flashcards as CSV files.
 
 ### Why these technologies
 
@@ -26,21 +25,21 @@ Admins and teachers manage users, exams, grammar lessons and vocabulary from an 
 - **JWT + Passport.js:** JWT keeps the API stateless; Passport handles Google and Facebook login so every login method ends with the same JWT.
 - **Gemini API:** powers speaking evaluation, the chat tutor and result analysis without training my own model.
 - **Web Speech API:** converts speech to text directly in the browser, free and with no extra server.
-- **Multer + Nodemailer:** file uploads (audio, images, CSV) and emails for account verification and password reset.
+- **Docker + Nginx:** the whole stack starts with one command; Nginx serves the React build and proxies `/api` to the backend, so only port 80 is exposed.
 
 ### Challenges
 
 - **Getting reliable output from the AI:** the speaking prompt asks Gemini to return only JSON with scores for fluency, grammar, vocabulary and pronunciation (1–10), an overall score and feedback. Gemini sometimes adds extra text, so the server cuts out the part between the first `{` and the last `}` before parsing it.
-- **Five user roles:** `superadmin`, `admin`, `teacher`, `student` and `user` need different permissions, handled by an auth middleware (checks the JWT) followed by a role middleware on each protected route.
+- **User roles:** an auth middleware checks the JWT, then a role middleware protects each route. The app uses `user`, `admin` and `superadmin`; `teacher` and `student` are reserved for course enrollment.
 - **Tracking progress across modules:** grammar, vocabulary and exams each store their own attempts and progress, and the database had to support both the learner's dashboard and the AI analysis.
-- **Listening exams:** one audio file is often shared by several questions, so the upload logic saves a shared audio file for the exam instead of one per question.
+- **Moving from XAMPP to Docker (MySQL 8):** paginated queries with `LIMIT ?` failed under `pool.execute()`, so they now use `pool.query()`; Vietnamese text in `db.sql` was imported as `latin1` until the MySQL container got `LANG=C.UTF-8`.
 
 ### Future features
 
+- Course enrollment with `teacher` and `student` roles
 - Pronunciation scoring from the recorded audio, not only from the transcript
-- Online payment for premium accounts
+- Saving AI chat history, HTTPS, online payment
 - Unit and integration tests for the API
-- Docker setup for easier deployment
 
 ## Table of Contents
 
@@ -55,19 +54,18 @@ Admins and teachers manage users, exams, grammar lessons and vocabulary from an 
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 19, React Router 6, Bootstrap 5, Chart.js, Axios |
+| Frontend | React 19, React Router 6, Bootstrap 5, Font Awesome, Chart.js, Axios |
 | Backend | Node.js, Express 5, Passport.js, JWT, bcrypt, Multer, Nodemailer |
-| Database | MySQL (19 tables) |
-| AI | Google Gemini API (gemini-2.5-flash), Web Speech API |
-| Tools | XAMPP, Git/GitHub, VS Code |
+| Database | MySQL 8 (19 tables) |
+| AI | Google Gemini API (gemini-3.1-flash-lite), Web Speech API |
+| Deployment | Docker, Docker Compose, Nginx |
 
 ## Installation and Running
 
 ### Requirements
 
-- Node.js 18 or later
-- MySQL (for example via XAMPP)
-- A Google Gemini API key ([aistudio.google.com](https://aistudio.google.com))
+- Docker Desktop (or Node.js 18+ and MySQL to run without Docker)
+- A Google Gemini API key and a Gmail App Password
 - Chrome or Edge (for the speech recognition feature)
 
 ### Step 1: Clone the repository
@@ -77,73 +75,33 @@ git clone https://github.com/Dinhminh04/english-practice.git
 cd english-practice
 ```
 
-### Step 2: Set up the database
-
-Create a database named `english_practice`, then import `db.sql` (in phpMyAdmin: select the database, open **Import**, choose `db.sql`), or run:
+### Step 2: Create the environment files
 
 ```bash
-mysql -u root -p english_practice < db.sql
+cp .env.example .env                                          # MYSQL_ROOT_PASSWORD
+cp english-practice-backend/.env.example english-practice-backend/.env
 ```
 
-### Step 3: Set up the backend
+Fill in `JWT_SECRET`, `SESSION_SECRET`, `GEMINI_API_KEY`, `EMAIL_USER` and `EMAIL_PASS`. Google and Facebook keys are optional; leave them empty to skip those login methods.
+
+### Step 3: Run with Docker
 
 ```bash
-cd english-practice-backend
-npm install
+docker compose up -d
 ```
 
-Create a `.env` file in `english-practice-backend`:
+MySQL imports `db.sql` on the first start. Open **http://localhost**. Google / Facebook redirect URIs: `http://localhost/api/auth/{google|facebook}/callback`.
 
-```env
-PORT=5000
-FRONTEND_URL=http://localhost:3000
+### Run without Docker
 
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=
-DB_NAME=english_practice
-
-JWT_SECRET=your_jwt_secret
-SESSION_SECRET=your_session_secret
-
-GEMINI_API_KEY=your_gemini_api_key
-
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_gmail_app_password
-
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-GOOGLE_CALLBACK_URL=http://localhost:5000/auth/google/callback
-
-FACEBOOK_APP_ID=
-FACEBOOK_APP_SECRET=
-FACEBOOK_CALLBACK_URL=
-
-OXFORD_APP_ID=
-OXFORD_APP_KEY=
-```
-
-Google, Facebook and Oxford keys are optional; leave them empty to skip those features.
-
-### Step 4: Run the backend
+Import `db.sql` into a MySQL database named `english_practice`, then:
 
 ```bash
-npm run dev
+cd english-practice-backend && npm install && npm run dev      # http://localhost:5000
+cd english-practice-frontend && cp .env.example .env && npm install && npm start   # http://localhost:3000
 ```
 
-The API runs at `http://localhost:5000`.
-
-### Step 5: Set up and run the frontend
-
-Open a new terminal:
-
-```bash
-cd english-practice-frontend
-npm install
-npm start
-```
-
-The app runs at `http://localhost:3000`.
+Set `DB_PORT` in the backend `.env` if MySQL does not use port 3306.
 
 ## API Overview
 
@@ -151,7 +109,7 @@ The app runs at `http://localhost:3000`.
 
 | Base path | Description |
 |---|---|
-| `/api/auth` | Register, login, verify email, forgot / reset password |
+| `/api/auth` | Register, login, verify email, forgot / reset password, Google / Facebook login |
 | `/api/user` | Profile, change password, learning history, weak areas |
 | `/api/grammar` | Topics, lessons, exercises, practices, progress, CSV import / export |
 | `/api/vocabulary` | Collections, flashcards, questions, progress, CSV import / export |
@@ -159,25 +117,25 @@ The app runs at `http://localhost:3000`.
 | `/api/speaking` | Get a random speaking topic, evaluate an answer |
 | `/api/chat` | AI tutor chat and voice feedback |
 | `/api/admin` | User management, statistics, premium status |
-| `/auth/google` | Google login (OAuth 2.0) |
 
 ## Project Structure
 
 ```
 english-practice/
-├── english-practice-backend/    # Express REST API
+├── english-practice-backend/    # Express REST API (Dockerfile)
 │   ├── controllers/  # Request handlers (auth, grammar, vocabulary, exam, speaking, chat, admin)
 │   ├── models/       # Database queries
 │   ├── routes/       # API routes
 │   ├── middleware/   # JWT auth and role checks
 │   ├── config/       # Database and Passport config
 │   └── utils/        # Email sender
-├── english-practice-frontend/   # React app
+├── english-practice-frontend/   # React app (multi-stage Dockerfile + nginx.conf)
 │   └── src/
 │       ├── components/   # grammar, vocabulary, exam, speaking, admin, layout, ChatAI
 │       ├── pages/        # AuthSuccess, VerifyEmail
 │       ├── routers/      # App routes
 │       └── api.js        # Axios instance
+├── docker-compose.yml           # MySQL + backend + Nginx
 └── db.sql                       # Database schema and sample data
 ```
 

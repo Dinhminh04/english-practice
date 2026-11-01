@@ -38,13 +38,13 @@ const ProgressDashboard = () => {
             try {
                 const token = localStorage.getItem('token');
                 const [examRes, vocabRes, weaknessesRes] = await Promise.all([
-                    axios.get('http://localhost:5000/api/exams/history', {
+                    axios.get('/api/exams/history', {
                         headers: { Authorization: `Bearer ${token}` },
                     }),
-                    axios.get('http://localhost:5000/api/vocabulary/learning/progress', {
+                    axios.get('/api/vocabulary/learning/progress', {
                         headers: { Authorization: `Bearer ${token}` },
                     }),
-                    axios.get('http://localhost:5000/api/user/weaknesses', {
+                    axios.get('/api/user/weaknesses', {
                         headers: { Authorization: `Bearer ${token}` },
                     }),
                 ]);

@@ -9,7 +9,7 @@ const sendMessage = async (req, res) => {
 
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite" });
 
     const prompt = `[Bạn là trợ lý tiếng Anh] Trả lời ngắn gọn (dưới 150 từ) bằng tiếng Việt: ${message}`;
 
@@ -37,7 +37,7 @@ const handleVoiceFeedback = async (req, res) => {
 
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite" });
 
     const prompt = `[Bạn là một giáo viên tiếng Anh] Người dùng đã nói: "${transcription}". Hãy đưa ra nhận xét về:
     1. Ngữ pháp (Grammar)
