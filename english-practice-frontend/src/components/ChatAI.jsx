@@ -1,21 +1,82 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import Markdown from "react-markdown";
 import "./assets/css/ChatAI.css";
 import api from "../api";
+
+const WELCOME_MESSAGE = {
+  text: "Xin chào! Tôi là trợ lý EnglishMaster. Tôi biết tiến độ học của bạn, có thể chỉ ra điểm yếu, giải thích lỗi sai trong bài thi, tra từ vựng và gợi ý bài học tiếp theo.",
+  sender: "ai",
+};
+
+// Câu hỏi gợi ý nhanh khi bắt đầu cuộc trò chuyện
+const SUGGESTIONS = [
+  "Điểm yếu của tôi là gì?",
+  "Hôm nay tôi nên học gì?",
+  "Giải thích lỗi sai bài thi gần nhất",
+  "Từ nào tôi cần ôn hôm nay?",
+];
+
+// Link nội bộ (/grammar/...) chuyển trang trong ứng dụng, link ngoài mở tab mới
+const MarkdownLink = ({ href = "", children }) =>
+  href.startsWith("/") ? (
+    <Link to={href}>{children}</Link>
+  ) : (
+    <a href={href} target="_blank" rel="noopener noreferrer">
+      {children}
+    </a>
+  );
 
 const ChatAI = () => {
   // Trạng thái của chat bot
   const [isOpen, setIsOpen] = useState(false);
   // Danh sách tin nhắn
-  const [messages, setMessages] = useState([
-    {
-      text: "Xin chào! Tôi là trợ lý tiếng Anh của bạn. Tôi có thể giúp bạn thực hành tiếng Anh, giải thích ngữ pháp, cung cấp từ vựng, sửa lỗi câu, và nhiều hơn thế nữa.",
-      sender: "ai",
-    },
-  ]);
+  const [messages, setMessages] = useState([WELCOME_MESSAGE]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  // Lịch sử cuộc trò chuyện
+  const [conversationId, setConversationId] = useState(null);
+  const [conversations, setConversations] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   const recognitionRef = useRef(null);
+
+  const isLoggedIn = () => Boolean(localStorage.getItem("token"));
+
+  // Lấy danh sách cuộc trò chuyện
+  const fetchConversations = async () => {
+    const response = await api.get("/chat/conversations");
+    setConversations(response.data.conversations);
+    return response.data.conversations;
+  };
+
+  // Mở một cuộc trò chuyện cũ
+  const openConversation = async (id) => {
+    try {
+      const response = await api.get(`/chat/conversations/${id}/messages`);
+      const loaded = response.data.messages.map((m) => ({
+        text: m.content,
+        sender: m.role === "user" ? "user" : "ai",
+      }));
+      setConversationId(id);
+      setMessages([WELCOME_MESSAGE, ...loaded]);
+      setShowHistory(false);
+    } catch (error) {
+      console.error("Error loading conversation:", error);
+    }
+  };
+
+  // Lần đầu mở chat: tải cuộc trò chuyện gần nhất
+  useEffect(() => {
+    if (!isOpen || historyLoaded || !isLoggedIn()) return;
+    setHistoryLoaded(true);
+    fetchConversations()
+      .then((list) => {
+        if (list.length > 0) openConversation(list[0].id);
+      })
+      .catch((error) => console.error("Error loading conversations:", error));
+  }, [isOpen, historyLoaded]);
 
   // Chuyển đổi trạng thái mở/đóng chat bot
   const toggleChat = () => {
@@ -36,22 +97,39 @@ const ChatAI = () => {
   };
 
   // Xử lý gửi tin nhắn
-  const handleSendMessage = async () => {
-    if (input.trim() === "") return;
+  const handleSendMessage = async (text = input) => {
+    if (text.trim() === "" || isLoading) return;
 
-    const userMessage = { text: input, sender: "user" };
+    if (!isLoggedIn()) {
+      setMessages((prev) => [
+        ...prev,
+        { text: "Vui lòng đăng nhập để trò chuyện với trợ lý.", sender: "ai" },
+      ]);
+      return;
+    }
+
+    const userMessage = { text, sender: "user" };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
 
     try {
-      const response = await api.post("/chat", { message: input });
+      const response = await api.post("/chat", {
+        message: text,
+        conversation_id: conversationId,
+      });
       const aiMessage = { text: response.data.reply, sender: "ai" };
       setMessages((prev) => [...prev, aiMessage]);
+      if (response.data.conversation_id !== conversationId) {
+        setConversationId(response.data.conversation_id);
+      }
+      fetchConversations().catch(() => {});
     } catch (error) {
       console.error("Error sending message:", error);
       const errorMessage = {
-        text: "Xin lỗi, tôi đang gặp sự cố. Vui lòng thử lại sau.",
+        text:
+          error.response?.data?.message ||
+          "Xin lỗi, tôi đang gặp sự cố. Vui lòng thử lại sau.",
         sender: "ai",
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -79,7 +157,7 @@ const ChatAI = () => {
     // Khởi tạo đối tượng nhận dạng giọng nói
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     recognitionRef.current = new SpeechRecognition();
-    
+
     recognitionRef.current.continuous = false;
     recognitionRef.current.interimResults = true;
     recognitionRef.current.lang = 'en-US';
@@ -108,7 +186,7 @@ const ChatAI = () => {
     recognitionRef.current.onerror = (event) => {
       console.error('Speech recognition error:', event.error);
       setIsRecording(false);
-      
+
       if (event.error === 'not-allowed') {
         alert('Vui lòng cho phép sử dụng microphone để ghi âm.');
       }
@@ -143,8 +221,8 @@ const ChatAI = () => {
     setIsLoading(true);
 
     try {
-      const response = await api.post("/chat/voice-feedback", { 
-        transcription: voiceText 
+      const response = await api.post("/chat/voice-feedback", {
+        transcription: voiceText
       });
       const aiMessage = { text: response.data.reply, sender: "ai" };
       setMessages((prev) => [...prev, aiMessage]);
@@ -171,15 +249,36 @@ const ChatAI = () => {
     }
   }, [messages, isLoading]);
 
-  // Xóa toàn bộ cuộc trò chuyện
-  const clearChat = () => {
-    setMessages([
-      {
-        text: "Xin chào! Tôi là trợ lý tiếng Anh của bạn. Tôi có thể giúp bạn thực hành tiếng Anh, giải thích ngữ pháp, cung cấp từ vựng, sửa lỗi câu, và nhiều hơn thế nữa.",
-        sender: "ai",
-      },
-    ]);
+  // Bắt đầu cuộc trò chuyện mới
+  const startNewChat = () => {
+    setConversationId(null);
+    setMessages([WELCOME_MESSAGE]);
+    setShowHistory(false);
   };
+
+  // Mở/đóng danh sách lịch sử
+  const toggleHistory = () => {
+    if (!showHistory && isLoggedIn()) {
+      fetchConversations().catch((error) =>
+        console.error("Error loading conversations:", error)
+      );
+    }
+    setShowHistory(!showHistory);
+  };
+
+  // Xóa một cuộc trò chuyện
+  const deleteConversation = async (id) => {
+    if (!window.confirm("Xóa cuộc trò chuyện này?")) return;
+    try {
+      await api.delete(`/chat/conversations/${id}`);
+      setConversations((prev) => prev.filter((c) => c.id !== id));
+      if (id === conversationId) startNewChat();
+    } catch (error) {
+      console.error("Error deleting conversation:", error);
+    }
+  };
+
+  const showSuggestions = messages.length === 1 && !isLoading;
 
   return (
     <div className="chat-ai-container">
@@ -190,16 +289,23 @@ const ChatAI = () => {
         <div className="chat-ai-window">
           <div className="chat-ai-header">
             <div className="header-left">
-              <h2>Trợ lý Tiếng Anh</h2>
+              <h2>Trợ lý EnglishMaster</h2>
               <span className="status-indicator">● Đang hoạt động</span>
             </div>
             <div className="header-right">
               <button
-                onClick={clearChat}
-                className="clear-chat-button"
-                title="Xóa cuộc trò chuyện"
+                onClick={toggleHistory}
+                className={`clear-chat-button ${showHistory ? "active" : ""}`}
+                title="Lịch sử trò chuyện"
               >
-                <i className="fas fa-trash"></i>
+                <i className="fas fa-clock-rotate-left"></i>
+              </button>
+              <button
+                onClick={startNewChat}
+                className="clear-chat-button"
+                title="Cuộc trò chuyện mới"
+              >
+                <i className="fas fa-plus"></i>
               </button>
               <button onClick={toggleChat} className="close-chat-button">
                 <i className="fas fa-times"></i>
@@ -207,12 +313,59 @@ const ChatAI = () => {
             </div>
           </div>
 
+          {showHistory && (
+            <div className="chat-ai-history">
+              <div className="history-title">Lịch sử trò chuyện</div>
+              {conversations.length === 0 ? (
+                <div className="history-empty">Chưa có cuộc trò chuyện nào.</div>
+              ) : (
+                conversations.map((c) => (
+                  <div
+                    key={c.id}
+                    className={`history-item ${c.id === conversationId ? "active" : ""}`}
+                  >
+                    <button
+                      className="history-open"
+                      onClick={() => openConversation(c.id)}
+                      title={c.title}
+                    >
+                      <span className="history-item-title">{c.title}</span>
+                      <span className="history-item-date">
+                        {new Date(c.updated_at).toLocaleString("vi-VN")}
+                      </span>
+                    </button>
+                    <button
+                      className="history-delete"
+                      onClick={() => deleteConversation(c.id)}
+                      title="Xóa"
+                    >
+                      <i className="fas fa-trash"></i>
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+
           <div className="chat-ai-messages">
             {messages.map((msg, index) => (
               <div key={index} className={`message ${msg.sender}`}>
-                {msg.text}
+                {msg.sender === "ai" ? (
+                  <Markdown components={{ a: MarkdownLink }}>{msg.text}</Markdown>
+                ) : (
+                  msg.text
+                )}
               </div>
             ))}
+            {showSuggestions && (
+              <div className="chat-ai-suggestions">
+                {SUGGESTIONS.map((s) => (
+                  <button key={s} onClick={() => handleSendMessage(s)}>
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
             {isLoading && (
               <div className="message ai loading">
                 <div className="typing-indicator">
@@ -231,8 +384,9 @@ const ChatAI = () => {
               value={input}
               onChange={handleInputChange}
               onKeyPress={handleKeyPress}
-              placeholder={isRecording ? "Đang nghe..." : "Nhập câu hỏi tiếng Anh của bạn..."}
+              placeholder={isRecording ? "Đang nghe..." : "Hỏi về bài học, từ vựng, điểm yếu..."}
               disabled={isLoading || isRecording}
+              maxLength={2000}
             />
             <button
               onClick={handleToggleRecording}
@@ -243,7 +397,7 @@ const ChatAI = () => {
               <i className={`fas ${isRecording ? "fa-stop" : "fa-microphone"}`}></i>
             </button>
             <button
-              onClick={handleSendMessage}
+              onClick={() => handleSendMessage()}
               disabled={isLoading || input.trim() === "" || isRecording}
               className="send-button"
             >

@@ -816,3 +816,26 @@ INSERT INTO questions (exam_id, question_type, question_text, question_order, op
 
 (5, 'multiple_choice', 'Vocabulary: Which word best describes something very important or noticeable?',
  15, '["Significant","Ordinary","Common","Regular"]', '"Significant"', 1);
+
+-- ============================================================
+-- AI tutor: conversations and messages
+-- ============================================================
+CREATE TABLE IF NOT EXISTS ai_conversations (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  title VARCHAR(255) NOT NULL DEFAULT 'Cuộc trò chuyện mới',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_ai_conversations_user (user_id, updated_at),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS ai_messages (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  conversation_id INT NOT NULL,
+  role ENUM('user', 'assistant') NOT NULL,
+  content TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_ai_messages_conversation (conversation_id, id),
+  FOREIGN KEY (conversation_id) REFERENCES ai_conversations(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

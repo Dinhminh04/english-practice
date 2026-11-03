@@ -1,6 +1,6 @@
 # English Practice
 
-A full-stack English learning web app with grammar lessons, vocabulary flashcards, exams and a Gemini-powered AI tutor. The tutor chats with learners, grades their speaking and points out their weak areas.
+A full-stack English learning web app with grammar lessons, vocabulary flashcards, exams and a Gemini-powered AI tutor. The tutor is a LangChain agent that reads the app's own data: it knows each learner's progress, explains their exam mistakes and recommends what to study next.
 
 The whole stack (MySQL, Express API, React + Nginx) runs with one `docker compose up` command.
 
@@ -35,10 +35,15 @@ Learners sign up with email (with email verification), or log in with Google / F
 - Automatic scoring
 - Exam history
 
-**Speaking and AI tutor**
+**Speaking**
 - The learner speaks into the microphone and the browser converts speech to text.
 - The Gemini API grades the answer and gives feedback.
-- The learner can chat with the AI tutor and ask questions in Vietnamese.
+
+**AI tutor (chat)**
+- Answers in Vietnamese using the app's real data: grammar lessons, flashcards, exams and the learner's own results.
+- Finds weak areas, explains wrong exam answers and suggests the next lessons, with clickable links.
+- Lists the words due for review today (spaced repetition).
+- Chat history is saved, so the tutor remembers the conversation; learners can start, reopen and delete conversations.
 
 **Learning analysis**
 - After each quiz or exam, the AI analyzes the result and lists the topics the learner is weak at.
@@ -55,17 +60,18 @@ Learners sign up with email (with email verification), or log in with Google / F
 |---|---|
 | Frontend | React 19, React Router 6, Bootstrap 5, Font Awesome, Chart.js, Axios |
 | Backend | Node.js, Express 5, Passport.js, JWT, bcrypt, Multer, Nodemailer |
-| Database | MySQL 8 (19 tables) |
-| AI | Google Gemini API (gemini-3.1-flash-lite), Web Speech API |
+| Database | MySQL 8 (21 tables) |
+| AI | Google Gemini API (gemini-3.5-flash-lite), LangChain.js (agent, tool calling), Web Speech API |
 | Deployment | Docker, Docker Compose, Nginx |
 
 ## Why These Technologies
 
 - **React:** the app has many interactive screens (flashcards, quizzes, timed exams, chat). Reusable components make them easier to build.
-- **Node.js + Express:** JavaScript on both frontend and backend. Express makes it simple to split 88 endpoints into routes, controllers and models.
+- **Node.js + Express:** JavaScript on both frontend and backend. Express makes it simple to split 91 endpoints into routes, controllers and models.
 - **MySQL:** users, lessons, questions, attempts and progress are closely related, so a relational database fits well.
 - **JWT + Passport.js:** JWT keeps the API stateless. Passport handles Google and Facebook login, and every login method ends with the same JWT.
 - **Gemini API:** powers speaking evaluation, the chat tutor and result analysis without training a custom model.
+- **LangChain (tool calling):** the tutor calls a set of read-only functions (search lessons, get my weaknesses, review my last exam...) instead of writing SQL. This keeps answers grounded in real data and limits what the AI can access.
 - **Web Speech API:** converts speech to text in the browser for free, with no extra server.
 - **Multer + Nodemailer:** Multer handles file uploads (audio, images, CSV). Nodemailer sends account verification and password reset emails.
 - **Docker + Nginx:** the whole stack starts with one command. Nginx serves the React build and proxies `/api` and `/uploads` to the backend, so only port 80 is exposed.
@@ -79,6 +85,9 @@ Learners sign up with email (with email verification), or log in with Google / F
 - **Moving from XAMPP to Docker (MySQL 8).**
   - Paginated queries with `LIMIT ? OFFSET ?` failed under `pool.execute()`, so they now use `pool.query()`.
   - Vietnamese text in `db.sql` was imported as `latin1` until the MySQL container got `LANG=C.UTF-8`.
+  - MySQL 8 returns `JSON` columns already parsed, while MariaDB returns text, so `JSON.parse` failed. A `typeCast` in the connection pool now returns JSON as text on both.
+- **Keeping the AI tutor safe.** Each tool gets the user id from the JWT, never from the model, so a learner can only see their own data. Messages are limited to 20 per minute per user.
+- **Gemini overload (503).** The first model was often overloaded, which made answers take about 50 seconds. The agent now uses a faster primary model and switches to a fallback model on errors, bringing replies down to about 2 seconds.
 
 ## Installation and Running
 
@@ -150,7 +159,7 @@ Set `DB_PORT` in the backend `.env` if MySQL does not use port 3306.
 
 ## API Overview
 
-88 endpoints, grouped by module:
+91 endpoints, grouped by module:
 
 | Base path | Description |
 |---|---|
@@ -160,7 +169,7 @@ Set `DB_PORT` in the backend `.env` if MySQL does not use port 3306.
 | `/api/vocabulary` | Collections, flashcards, questions, progress, CSV import / export |
 | `/api/exams` | Exam CRUD, questions with audio / images, submit, results, history, AI analysis |
 | `/api/speaking` | Random speaking topic, answer evaluation |
-| `/api/chat` | AI tutor chat and voice feedback |
+| `/api/chat` | AI tutor chat, conversation history (list, messages, delete), voice feedback |
 | `/api/admin` | User management, statistics, premium status |
 | `/api/health` | Health check |
 
@@ -174,6 +183,7 @@ english-practice/
 │   ├── middleware/   # JWT auth and role checks
 │   ├── models/       # Database queries
 │   ├── routes/       # API routes
+│   ├── services/     # AI tutor: LangChain agent and its tools
 │   ├── utils/        # Email sender
 │   └── server.js     # Entry point
 ├── english-practice-frontend/   # React app (multi-stage Dockerfile + nginx.conf)
@@ -191,7 +201,7 @@ english-practice/
 
 - Course enrollment with `teacher` and `student` roles
 - Pronunciation scoring from recorded audio, not only from the transcript
-- Saving AI chat history
+- Streaming AI replies word by word
 - HTTPS and online payment for premium accounts
 - Unit and integration tests for the API
 

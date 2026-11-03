@@ -15,6 +15,7 @@ const vocabulary = require("./routes/vocabularyRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const speakingRoutes = require("./routes/speakingRoutes"); // Thêm import
+const AiChat = require("./models/aiChatModel");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -29,6 +30,11 @@ const PORT = process.env.PORT || 5000;
   "uploads/grammar/images",
   "uploads/grammar/temp",
 ].forEach((dir) => fs.mkdirSync(path.join(__dirname, dir), { recursive: true }));
+
+// Create the AI chat tables if they do not exist yet
+AiChat.ensureTables().catch((err) =>
+  console.error("Không tạo được bảng AI chat:", err.message)
+);
 
 // Middleware
 app.use(

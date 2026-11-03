@@ -10,6 +10,10 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
+  // MySQL 8 returns JSON columns already parsed, MariaDB returns them as text.
+  // Always return text so the existing JSON.parse calls work on both.
+  typeCast: (field, next) =>
+    field.type === "JSON" ? field.string("utf8") : next(),
 });
 
 // Test the connection
