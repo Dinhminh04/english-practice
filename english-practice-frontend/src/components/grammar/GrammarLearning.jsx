@@ -5,6 +5,7 @@ import api from "../../api";
 import GrammarLessonView from "./GrammarLessonView";
 import GrammarQuiz from "./GrammarQuiz";
 import ProgressTracker from "./ProgressTracker";
+import AiAnalysis from "../AiAnalysis";
 
 const GrammarLearning = () => {
   const { lessonId } = useParams();
@@ -431,10 +432,9 @@ const QuizResult = ({ result, lesson, quiz, onRetry, onNext, onAnalyze, analysis
             </h5>
             <div className="card bg-light border-0">
               <div className="card-body">
-                <div className="analysis-content" 
-                  style={{lineHeight: '1.6', maxHeight: '300px', overflowY: 'auto'}}
-                  dangerouslySetInnerHTML={{ __html: analysis.replace(/\n/g, '<br />') }} 
-                />
+                <div className="analysis-content" style={{ maxHeight: '420px', overflowY: 'auto' }}>
+                  <AiAnalysis text={analysis} />
+                </div>
               </div>
             </div>
           </div>

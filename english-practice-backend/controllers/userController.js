@@ -3,6 +3,7 @@ const { Exam, ExamResult, ExamSubmission, Question } = require("../models/examMo
 const { Grammar } = require("../models/grammarModel");
 const { Vocabulary } = require("../models/vocabularyModel");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { ANALYSIS_FORMAT } = require("../utils/aiFormat");
 
 const getProfile = async (req, res) => {
   try {
@@ -229,11 +230,8 @@ const getWeaknesses = async (req, res) => {
         })
         .join(`\n`)}
 
-      Yêu cầu:
-      1. Phân tích tổng quan các lỗi sai và xác định các điểm yếu chính của học sinh (ví dụ: yếu về thì quá khứ đơn, nhầm lẫn giới từ, từ vựng về chủ đề công việc, v.v.).
-      2. Đưa ra các gợi ý học tập cụ thể để khắc phục các điểm yếu này. Ví dụ: \"Bạn nên tập trung vào các bài học về thì hiện tại hoàn thành\" hoặc \"Hãy học thêm các từ vựng thuộc chủ đề gia đình.\"
-      3. Gợi ý một vài bài học hoặc chủ đề cụ thể có trong hệ thống để học sinh có thể truy cập ngay.
-      4. Trình bày kết quả dưới dạng markdown, rõ ràng, dễ hiểu.
+      Gom các lỗi theo điểm yếu chính (ví dụ: thì hiện tại đơn, giới từ, từ vựng chủ đề công việc).
+      ${ANALYSIS_FORMAT}
     `;
 
     const result = await model.generateContent(prompt);

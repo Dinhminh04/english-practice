@@ -1,4 +1,5 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { ANALYSIS_FORMAT } = require("../utils/aiFormat");
 const {
   GrammarTopic,
   GrammarLesson,
@@ -895,7 +896,7 @@ exports.analyzeGrammarResult = async (req, res) => {
     }
 
     const prompt = `
-      Bạn là một giáo viên tiếng Anh chuyên nghiệp. Hãy phân tích kết quả bài làm ngữ pháp của một học sinh và đưa ra nhận xét chi tiết bằng tiếng Việt.
+      Bạn là một giáo viên tiếng Anh chuyên nghiệp. Hãy phân tích kết quả bài làm ngữ pháp của một học sinh và đưa ra nhận xét ngắn gọn bằng tiếng Việt, tập trung vào quy tắc ngữ pháp.
       Dưới đây là danh sách các câu hỏi học sinh đã trả lời sai:
 
       ${incorrectAnswers
@@ -917,10 +918,7 @@ exports.analyzeGrammarResult = async (req, res) => {
         })
         .join(`\n`)}
 
-      Yêu cầu:
-      1. Với mỗi câu trả lời sai, hãy giải thích rõ ràng tại sao đáp án của học sinh lại sai và tại sao đáp án đúng lại đúng. Tập trung vào các quy tắc ngữ pháp.
-      2. Sau khi phân tích từng câu, hãy đưa ra một bản tóm tắt tổng quan về các điểm yếu ngữ pháp của học sinh.
-      3. Cuối cùng, đề xuất các chủ đề ngữ pháp cụ thể mà học sinh nên tập trung ôn luyện để cải thiện.
+      ${ANALYSIS_FORMAT}
     `;
 
     const result = await model.generateContent(prompt);

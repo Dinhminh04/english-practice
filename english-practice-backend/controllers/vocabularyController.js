@@ -10,6 +10,7 @@ const fs = require("fs");
 const { Parser } = require("json2csv");
 const fetch = require("node-fetch");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { ANALYSIS_FORMAT } = require("../utils/aiFormat");
 
 // Bộ từ vựng
 exports.createCollection = async (req, res) => {
@@ -750,7 +751,7 @@ exports.analyzeQuizResult = async (req, res) => {
     }
 
     const prompt = `
-      Bạn là một giáo viên tiếng Anh chuyên nghiệp. Hãy phân tích kết quả bài kiểm tra từ vựng của một học sinh và đưa ra nhận xét chi tiết bằng tiếng Việt.
+      Bạn là một giáo viên tiếng Anh chuyên nghiệp. Hãy phân tích kết quả bài kiểm tra từ vựng của một học sinh và đưa ra nhận xét ngắn gọn bằng tiếng Việt, tập trung vào nghĩa và cách dùng từ.
       Dưới đây là danh sách các câu hỏi học sinh đã trả lời sai:
 
       ${incorrectAnswers
@@ -767,10 +768,7 @@ exports.analyzeQuizResult = async (req, res) => {
         })
         .join(`\n`)}
 
-      Yêu cầu:
-      1. Với mỗi câu trả lời sai, hãy giải thích rõ ràng tại sao đáp án của học sinh lại sai và tại sao đáp án đúng lại đúng. Tập trung vào ý nghĩa và cách dùng của từ vựng.
-      2. Sau khi phân tích từng câu, hãy đưa ra một bản tóm tắt tổng quan về những điểm yếu trong vốn từ vựng của học sinh.
-      3. Cuối cùng, đề xuất các phương pháp học từ vựng hiệu quả và các chủ đề từ vựng mà học sinh nên tập trung ôn luyện để cải thiện.
+      ${ANALYSIS_FORMAT}
     `;
 
     const result = await model.generateContent(prompt);
@@ -998,7 +996,7 @@ exports.analyzeQuizResult = async (req, res) => {
     }
 
     const prompt = `
-      Bạn là một giáo viên tiếng Anh chuyên nghiệp. Hãy phân tích kết quả bài kiểm tra từ vựng của một học sinh và đưa ra nhận xét chi tiết bằng tiếng Việt.
+      Bạn là một giáo viên tiếng Anh chuyên nghiệp. Hãy phân tích kết quả bài kiểm tra từ vựng của một học sinh và đưa ra nhận xét ngắn gọn bằng tiếng Việt, tập trung vào nghĩa và cách dùng từ.
       Dưới đây là danh sách các câu hỏi học sinh đã trả lời sai:
 
       ${incorrectAnswers
@@ -1015,10 +1013,7 @@ exports.analyzeQuizResult = async (req, res) => {
         })
         .join(`\n`)}
 
-      Yêu cầu:
-      1. Với mỗi câu trả lời sai, hãy giải thích rõ ràng tại sao đáp án của học sinh lại sai và tại sao đáp án đúng lại đúng. Tập trung vào ý nghĩa và cách dùng của từ vựng.
-      2. Sau khi phân tích từng câu, hãy đưa ra một bản tóm tắt tổng quan về những điểm yếu trong vốn từ vựng của học sinh.
-      3. Cuối cùng, đề xuất các phương pháp học từ vựng hiệu quả và các chủ đề từ vựng mà học sinh nên tập trung ôn luyện để cải thiện.
+      ${ANALYSIS_FORMAT}
     `;
 
     const result = await model.generateContent(prompt);

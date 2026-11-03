@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../../api";
+import AiAnalysis from "../AiAnalysis";
 import "../assets/css/selftestquiz.css"
 
 const SelfTestQuiz = () => {
@@ -452,15 +453,7 @@ const SelfTestQuiz = () => {
 
                         {analysis && (
                           <div className="ai-analysis-result mt-4 p-4 bg-light rounded border">
-                            <pre
-                              style={{
-                                whiteSpace: "pre-wrap",
-                                fontFamily: "inherit",
-                                fontSize: "inherit",
-                              }}
-                            >
-                              {analysis}
-                            </pre>
+                            <AiAnalysis text={analysis} />
                           </div>
                         )}
 

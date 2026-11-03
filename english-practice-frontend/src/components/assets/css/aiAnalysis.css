@@ -1,0 +1,92 @@
+/* Shared style for AI analysis text (exam, grammar, vocabulary, progress pages) */
+.ai-analysis-markdown {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #2c3e50;
+  text-align: left;
+}
+
+.ai-analysis-markdown p {
+  margin: 0 0 0.5rem;
+}
+
+/* A paragraph that only contains bold text is a section title: Lỗi sai / Nhận xét / Nên ôn */
+.ai-analysis-markdown p:has(> strong:only-child) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 1rem 0 0.5rem;
+  padding: 6px 12px;
+  border-left: 4px solid #667eea;
+  background: linear-gradient(90deg, rgba(102, 126, 234, 0.12), rgba(118, 75, 162, 0));
+  border-radius: 0 8px 8px 0;
+  font-size: 0.98rem;
+  color: #4b3f9e;
+}
+
+.ai-analysis-markdown > p:first-child:has(> strong:only-child) {
+  margin-top: 0;
+}
+
+.ai-analysis-markdown p:has(> strong:only-child)::before {
+  font-family: "Font Awesome 7 Free", "Font Awesome 6 Free", "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f0eb"; /* lightbulb */
+  color: #667eea;
+}
+
+.ai-analysis-markdown p:has(> strong:only-child):first-child::before {
+  content: "\f071"; /* triangle-exclamation for "Lỗi sai" */
+  color: #e74c3c;
+}
+
+.ai-analysis-markdown ul,
+.ai-analysis-markdown ol {
+  margin: 0 0 0.5rem;
+  padding-left: 0;
+  list-style: none;
+}
+
+.ai-analysis-markdown li {
+  position: relative;
+  padding: 6px 10px 6px 28px;
+  margin-bottom: 6px;
+  background: #f8f9ff;
+  border: 1px solid #e6e9fb;
+  border-radius: 8px;
+}
+
+.ai-analysis-markdown li::before {
+  content: "";
+  position: absolute;
+  left: 11px;
+  top: 0.95em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #667eea;
+}
+
+/* Highlighted answers inside a list item: wrong answer first, correct answer second */
+.ai-analysis-markdown li strong {
+  padding: 0 6px;
+  border-radius: 4px;
+  background: #e8f8ef;
+  color: #1e8449;
+}
+
+.ai-analysis-markdown li strong:first-of-type:not(:only-of-type) {
+  background: #fdecea;
+  color: #c0392b;
+}
+
+.ai-analysis-markdown a {
+  color: #4b3f9e;
+  font-weight: 600;
+}
+
+.ai-analysis-markdown code {
+  background: #eef0fb;
+  border-radius: 4px;
+  padding: 0 4px;
+}

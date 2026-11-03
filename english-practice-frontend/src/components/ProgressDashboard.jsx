@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import AiAnalysis from './AiAnalysis';
 import { Line } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -262,10 +263,9 @@ const ProgressDashboard = () => {
                                     </div>
                                     <h3 className="suggestion-title">Phân tích từ AI</h3>
                                 </div>
-                                <div 
-                                    className="suggestion-content"
-                                    dangerouslySetInnerHTML={{ __html: weaknesses.replace(/\n/g, '<br />') }} 
-                                />
+                                <div className="suggestion-content">
+                                    <AiAnalysis text={weaknesses} />
+                                </div>
                             </div>
                         ) : (
                             <div className="suggestion-card success">

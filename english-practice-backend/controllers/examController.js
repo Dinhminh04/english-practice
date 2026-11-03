@@ -1,4 +1,5 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { ANALYSIS_FORMAT } = require("../utils/aiFormat");
 const {
   Exam,
   Question,
@@ -461,7 +462,7 @@ exports.analyzeExamResult = async (req, res) => {
     }
 
     const prompt = `
-      Bạn là một giáo viên tiếng Anh chuyên nghiệp. Hãy phân tích kết quả bài làm của một học sinh và đưa ra nhận xét chi tiết bằng tiếng Việt.
+      Bạn là một giáo viên tiếng Anh chuyên nghiệp. Hãy phân tích kết quả bài làm của một học sinh và đưa ra nhận xét ngắn gọn bằng tiếng Việt.
       Dưới đây là danh sách các câu hỏi học sinh đã trả lời sai:
 
       ${incorrectAnswers.map((q, index) => {
@@ -475,10 +476,7 @@ exports.analyzeExamResult = async (req, res) => {
       `;
       }).join("\n")}
 
-      Yêu cầu:
-      1. Với mỗi câu trả lời sai, hãy giải thích rõ ràng tại sao đáp án của học sinh lại sai và tại sao đáp án đúng lại đúng.
-      2. Đưa ra bản tóm tắt tổng quan về năng lực của học sinh.
-      3. Đề xuất 1-2 chủ đề cụ thể mà học sinh nên ôn luyện.
+      ${ANALYSIS_FORMAT}
     `;
 
     const result = await model.generateContent(prompt);
