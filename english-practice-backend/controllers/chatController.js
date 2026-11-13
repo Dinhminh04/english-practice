@@ -1,10 +1,12 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { ChatPromptTemplate } = require("@langchain/core/prompts");
+const { StringOutputParser } = require("@langchain/core/output_parsers");
+const { getChatModel } = require("../services/llm");
 const AiChat = require("../models/aiChatModel");
 const User = require("../models/userModel");
 const { askTutor } = require("../services/aiTutor");
+const { loadMemory, saveTurn, summarizeIfNeeded } = require("../services/chatMemory");
 
 const MAX_MESSAGE_LENGTH = 2000;
-const HISTORY_LIMIT = 20;
 
 const makeTitle = (message) => {
   const text = message.replace(/\s+/g, " ").trim();
@@ -27,28 +29,39 @@ const sendMessage = async (req, res) => {
 
   try {
     let conversationId = conversation_id ? parseInt(conversation_id, 10) : null;
-    let history = [];
+    let memory = { summary: "", messages: [] };
 
     if (conversationId) {
       const conversation = await AiChat.findConversation(conversationId, userId);
       if (!conversation) {
         return res.status(404).json({ message: "Không tìm thấy cuộc trò chuyện" });
       }
-      history = await AiChat.getRecentMessages(conversationId, HISTORY_LIMIT);
+      // Memory = summary of old messages + recent messages
+      memory = await loadMemory(conversationId);
     }
 
     const users = await User.findById(userId);
     const displayName = users[0]?.display_name || "bạn";
 
-    const reply = await askTutor({ userId, displayName, history, message: message.trim() });
+    const { reply, toolsUsed } = await askTutor({
+      userId,
+      displayName,
+      summary: memory.summary,
+      history: memory.messages,
+      message: message.trim(),
+    });
 
     if (!conversationId) {
       conversationId = await AiChat.createConversation(userId, makeTitle(message));
     }
-    await AiChat.addMessage(conversationId, "user", message.trim());
-    await AiChat.addMessage(conversationId, "assistant", reply);
+    await saveTurn(conversationId, message.trim(), reply);
 
-    res.json({ reply, conversation_id: conversationId });
+    res.json({ reply, conversation_id: conversationId, tools_used: toolsUsed });
+
+    // After responding: fold old messages into the summary (does not slow down the reply)
+    summarizeIfNeeded(conversationId).catch((err) =>
+      console.error("Không tóm tắt được cuộc trò chuyện:", err.message)
+    );
   } catch (error) {
     console.error("Error sending message with AI:", error);
     res.status(503).json({
@@ -99,6 +112,17 @@ const deleteConversation = async (req, res) => {
   }
 };
 
+// Chain nhận xét câu nói: prompt -> model -> text
+const voiceFeedbackChain = ChatPromptTemplate.fromMessages([
+  [
+    "system",
+    "Bạn là một giáo viên tiếng Anh. Nhận xét câu nói của người học về: 1. Ngữ pháp, 2. Từ vựng, 3. Độ tự nhiên, 4. Gợi ý cải thiện. Trả lời bằng tiếng Việt, ngắn gọn (khoảng 80 từ) và thân thiện.",
+  ],
+  ["human", "Câu người học vừa nói: {transcription}"],
+])
+  .pipe(getChatModel(0.4))
+  .pipe(new StringOutputParser());
+
 // API mới cho voice feedback (nhận transcript từ frontend)
 const handleVoiceFeedback = async (req, res) => {
   const { transcription } = req.body;
@@ -108,21 +132,7 @@ const handleVoiceFeedback = async (req, res) => {
   }
 
   try {
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || "gemini-3.5-flash-lite" });
-
-    const prompt = `[Bạn là một giáo viên tiếng Anh] Người dùng đã nói: "${transcription}". Hãy đưa ra nhận xét về:
-    1. Ngữ pháp (Grammar)
-    2. Từ vựng (Vocabulary) 
-    3. Độ tự nhiên (Naturalness)
-    4. Gợi ý cải thiện
-    
-    Trả lời bằng tiếng Việt, ngắn gọn và thân thiện.`;
-
-    const result = await model.generateContent(prompt);
-    const aiResponse = await result.response;
-    const text = await aiResponse.text();
-
+    const text = await voiceFeedbackChain.invoke({ transcription });
     res.json({ reply: text });
   } catch (error) {
     console.error("Error handling voice feedback:", error);

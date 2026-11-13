@@ -1,5 +1,4 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const { ANALYSIS_FORMAT } = require("../utils/aiFormat");
+const { analyzeWrongAnswers } = require("../services/analysisChain");
 const {
   Exam,
   Question,
@@ -450,39 +449,16 @@ exports.analyzeExamResult = async (req, res) => {
   }
 
   try {
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || "gemini-3.5-flash-lite" });
+    const items = detailedResults
+      .filter((q) => !q.is_correct)
+      .map((q) => ({
+        question: q.question_text,
+        options: Array.isArray(q.options) ? q.options : [],
+        userAnswer: q.user_answer,
+        correctAnswer: parseCorrectAnswerValue(q.correct_answer),
+      }));
 
-    const incorrectAnswers = detailedResults.filter((q) => !q.is_correct);
-
-    if (incorrectAnswers.length === 0) {
-      return res.json({
-        analysis: "Chúc mừng! Bạn đã trả lời đúng tất cả các câu hỏi. Không có gì cần phân tích thêm.",
-      });
-    }
-
-    const prompt = `
-      Bạn là một giáo viên tiếng Anh chuyên nghiệp. Hãy phân tích kết quả bài làm của một học sinh và đưa ra nhận xét ngắn gọn bằng tiếng Việt.
-      Dưới đây là danh sách các câu hỏi học sinh đã trả lời sai:
-
-      ${incorrectAnswers.map((q, index) => {
-        const correctValue = parseCorrectAnswerValue(q.correct_answer);
-        return `
-        Câu ${index + 1}:
-        - Đề bài: ${q.question_text}
-        - Các lựa chọn: ${JSON.stringify(q.options)}
-        - Câu trả lời của học sinh: "${q.user_answer}"
-        - Đáp án đúng: "${correctValue}"
-      `;
-      }).join("\n")}
-
-      ${ANALYSIS_FORMAT}
-    `;
-
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const analysis = await response.text();
-
+    const analysis = await analyzeWrongAnswers(items, "Đây là kết quả một bài thi.");
     res.json({ analysis });
   } catch (error) {
     console.error("Error analyzing exam result with AI:", error);

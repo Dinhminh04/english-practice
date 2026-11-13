@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import Layout from "../layout/admin/Layout";
+import ExamImportModal from "./ExamImportModal";
 
 // Khởi tạo SweetAlert với React
 const MySwal = withReactContent(Swal);
@@ -21,6 +22,7 @@ const MySwal = withReactContent(Swal);
 const ExamManagement = ({ handleLogout }) => {
   const [exams, setExams] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
   const [editingExam, setEditingExam] = useState(null);
   const [showQuestionModal, setShowQuestionModal] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState(null);
@@ -353,10 +355,22 @@ const ExamManagement = ({ handleLogout }) => {
       <div className="page-inner">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2 className="mb-3 mb-md-0 fw-bold text-primary">Quản lý Đề thi IELTS</h2>
-          <Button variant="primary" onClick={() => setShowModal(true)}>
-            Tạo Đề thi Mới
-          </Button>
+          <div className="d-flex gap-2">
+            <Button variant="outline-primary" onClick={() => setShowImportModal(true)}>
+              <i className="fas fa-file-pdf me-2"></i>
+              Nhập đề từ PDF (AI)
+            </Button>
+            <Button variant="primary" onClick={() => setShowModal(true)}>
+              Tạo Đề thi Mới
+            </Button>
+          </div>
         </div>
+
+        <ExamImportModal
+          show={showImportModal}
+          onHide={() => setShowImportModal(false)}
+          onSaved={fetchExams}
+        />
 
         <Tabs
           activeKey={activeTab}

@@ -31,6 +31,7 @@ CREATE TABLE exams (
     duration INT,
     total_questions INT DEFAULT 0,
     difficulty ENUM('easy', 'medium', 'hard') DEFAULT 'medium',
+    shared_audio_url VARCHAR(255) NULL,
     created_by INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

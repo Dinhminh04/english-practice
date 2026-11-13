@@ -29,6 +29,59 @@ const AiChat = {
   ensureTables: async () => {
     await pool.query(CREATE_CONVERSATIONS);
     await pool.query(CREATE_MESSAGES);
+
+    // Summary memory: summary of old messages + id of the last message it covers
+    const [columns] = await pool.query(
+      `SELECT COLUMN_NAME FROM information_schema.COLUMNS
+       WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'ai_conversations'
+         AND COLUMN_NAME IN ('summary', 'summarized_until')`
+    );
+    const existing = columns.map((c) => c.COLUMN_NAME);
+    if (!existing.includes("summary")) {
+      await pool.query("ALTER TABLE ai_conversations ADD COLUMN summary TEXT NULL");
+    }
+    if (!existing.includes("summarized_until")) {
+      await pool.query("ALTER TABLE ai_conversations ADD COLUMN summarized_until INT NULL");
+    }
+  },
+
+  // Bản tóm tắt hiện tại của cuộc trò chuyện
+  getMemoryState: async (conversationId) => {
+    const [rows] = await pool.query(
+      "SELECT summary, summarized_until FROM ai_conversations WHERE id = ?",
+      [conversationId]
+    );
+    return rows[0] || { summary: null, summarized_until: null };
+  },
+
+  // Lưu tóm tắt mới; chỉ ghi nếu chưa có tiến trình nào khác tóm tắt trước (tránh ghi đè)
+  saveSummary: async (conversationId, summary, summarizedUntil, previousUntil) => {
+    const [result] = await pool.query(
+      `UPDATE ai_conversations SET summary = ?, summarized_until = ?, updated_at = updated_at
+       WHERE id = ? AND summarized_until <=> ?`,
+      [summary, summarizedUntil, conversationId, previousUntil]
+    );
+    return result.affectedRows > 0;
+  },
+
+  // Tin nhắn có id lớn hơn afterId (phần chưa được tóm tắt), theo thứ tự thời gian
+  getMessagesAfter: async (conversationId, afterId = 0) => {
+    const [rows] = await pool.query(
+      `SELECT id, role, content FROM ai_messages
+       WHERE conversation_id = ? AND id > ?
+       ORDER BY id ASC`,
+      [conversationId, afterId || 0]
+    );
+    return rows;
+  },
+
+  // Xóa toàn bộ tin nhắn và tóm tắt của một cuộc trò chuyện
+  clearMessages: async (conversationId) => {
+    await pool.query("DELETE FROM ai_messages WHERE conversation_id = ?", [conversationId]);
+    await pool.query(
+      "UPDATE ai_conversations SET summary = NULL, summarized_until = NULL WHERE id = ?",
+      [conversationId]
+    );
   },
 
   // Tạo cuộc trò chuyện mới

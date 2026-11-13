@@ -349,8 +349,12 @@ const ExamTaking = () => {
                         <span className="audio-icon"><i className="fas fa-music" aria-hidden="true"></i></span>
                         <span>Audio</span>
                       </div>
-                      <audio controls className="audio-element">
-                        <source src={`${question.audio_url}`} type="audio/mpeg" />
+                      <audio
+                        controls
+                        className="audio-element"
+                        key={question.audio_url}
+                        src={question.audio_url}
+                      >
                         Trình duyệt của bạn không hỗ trợ phát audio.
                       </audio>
                     </div>

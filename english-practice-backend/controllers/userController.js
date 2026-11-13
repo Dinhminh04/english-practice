@@ -2,8 +2,7 @@ const User = require("../models/userModel");
 const { Exam, ExamResult, ExamSubmission, Question } = require("../models/examModel");
 const { Grammar } = require("../models/grammarModel");
 const { Vocabulary } = require("../models/vocabularyModel");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const { ANALYSIS_FORMAT } = require("../utils/aiFormat");
+const { analyzeWrongAnswers } = require("../services/analysisChain");
 
 const getProfile = async (req, res) => {
   try {
@@ -135,7 +134,7 @@ const getWeaknesses = async (req, res) => {
       return res.status(500).json({ message: "Lỗi server" });
     }
     console.log(`Fetching exam history for user: ${userId}`);
-    const examHistory = await ExamResult.findExamResultsByUserId(userId);
+    const [examHistory] = await ExamResult.findExamResultsByUserId(userId);
     console.log(`Found ${examHistory.length} exam results.`);
 
     if (!examHistory || examHistory.length === 0) {
@@ -207,37 +206,21 @@ const getWeaknesses = async (req, res) => {
       });
     }
 
-    console.log("Calling Gemini API");
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || "gemini-3.5-flash-lite" });
+    // Only the 30 most recent mistakes, to keep the prompt short
+    const items = allIncorrectAnswers.slice(0, 30).map((q) => ({
+      question: q.question_text,
+      options: q.options,
+      userAnswer: q.options[q.user_answer] || q.user_answer,
+      correctAnswer:
+        typeof q.correct_answer === "string"
+          ? q.correct_answer
+          : q.options[q.correct_answer.answer] || JSON.stringify(q.correct_answer),
+    }));
 
-    const prompt = `
-      Bạn là một giáo viên tiếng Anh chuyên nghiệp. Hãy phân tích điểm yếu của học sinh dựa trên lịch sử các câu trả lời sai và đưa ra gợi ý học tập cá nhân hóa.
-      Dưới đây là danh sách các câu hỏi học sinh đã trả lời sai từ nhiều bài thi khác nhau:
-
-      ${allIncorrectAnswers
-        .map((q, index) => {
-          const userAnswerText = q.options[q.user_answer] || q.user_answer;
-          const correctAnswerText = q.options[q.correct_answer.answer] || JSON.stringify(q.correct_answer);
-          return `
-        Câu ${index + 1}:
-        - Đề bài: ${q.question_text}
-        - Các lựa chọn: ${JSON.stringify(q.options)}
-        - Câu trả lời của học sinh: "${userAnswerText}"
-        - Đáp án đúng: "${correctAnswerText}"
-        - Loại câu hỏi: ${q.question_type}
-      `;
-        })
-        .join(`\n`)}
-
-      Gom các lỗi theo điểm yếu chính (ví dụ: thì hiện tại đơn, giới từ, từ vựng chủ đề công việc).
-      ${ANALYSIS_FORMAT}
-    `;
-
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const analysis = await response.text();
-
+    const analysis = await analyzeWrongAnswers(
+      items,
+      "Đây là các lỗi sai từ nhiều bài thi khác nhau. Hãy gom các lỗi theo điểm yếu chính (ví dụ: thì hiện tại đơn, giới từ, từ vựng chủ đề công việc)."
+    );
     res.json({ analysis });
   } catch (error) {
     console.error("Error getting weaknesses:", error);

@@ -1,6 +1,7 @@
 const { tool } = require("langchain");
 const { z } = require("zod");
 const pool = require("../config/database");
+const { knowledgeRetriever } = require("./ragChain");
 
 // All tools are read-only. userId is bound from the JWT, never taken from the model,
 // so the AI can only read the data of the user who is chatting.
@@ -13,6 +14,38 @@ const examLink = (id) => `/exams/${id}/take`;
 const collectionLink = (id) => `/vocabulary-collections/${id}/study`;
 
 const buildTools = (userId) => [
+  // RAG tool: semantic search in the Qdrant knowledge base (documents, lessons, flashcards, exam questions)
+  tool(
+    async ({ query, scope }) => {
+      try {
+        const hits = await knowledgeRetriever.invoke({ query, scope: scope || "all" });
+        if (hits.length === 0) return toJson({ results: [], note: "No relevant material found" });
+        return toJson({
+          results: hits.map((h) => ({
+            citation: h.citation,
+            link: h.link,
+            content: h.content.slice(0, 800),
+          })),
+        });
+      } catch (error) {
+        console.error("search_knowledge failed:", error.message);
+        return toJson({ error: "Knowledge base is unavailable right now" });
+      }
+    },
+    {
+      name: "search_knowledge",
+      description:
+        "Semantic search in EnglishMaster's knowledge base: teacher documents (PDF notes), grammar lessons, flashcards and practice questions. Use it FIRST for questions about grammar rules, usage, word meaning or common mistakes, then answer from the results and cite each result's 'citation'.",
+      schema: z.object({
+        query: z.string().min(2).describe("The learner's question, rewritten as a short search query"),
+        scope: z
+          .enum(["all", "theory", "vocabulary", "practice"])
+          .optional()
+          .describe("theory = documents + grammar lessons, vocabulary = flashcards, practice = exam questions; default all"),
+      }),
+    }
+  ),
+
   tool(
     async ({ keyword }) => {
       const params = [];

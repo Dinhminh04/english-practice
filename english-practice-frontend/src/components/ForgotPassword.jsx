@@ -35,7 +35,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-vh-100 bg-gradient-primary d-flex align-items-center py-5">
+    <div className="forgot-password-page min-vh-100 bg-gradient-primary d-flex align-items-center py-5">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-xl-5 col-lg-6 col-md-8">

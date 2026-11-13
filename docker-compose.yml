@@ -31,11 +31,15 @@ services:
       FRONTEND_URL: http://localhost
       GOOGLE_CALLBACK_URL: http://localhost/api/auth/google/callback
       FACEBOOK_CALLBACK_URL: http://localhost/api/auth/facebook/callback
+      QDRANT_URL: http://qdrant:6333
     volumes:
       - uploads_data:/app/uploads
+      - ai_docs_data:/app/storage
     depends_on:
       mysql:
         condition: service_healthy
+      qdrant:
+        condition: service_started
     networks:
       - app_net
 
@@ -50,9 +54,20 @@ services:
     networks:
       - app_net
 
+  qdrant:
+    image: qdrant/qdrant:v1.20.0
+    container_name: english_qdrant
+    restart: unless-stopped
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - app_net
+
 volumes:
   mysql_data:
   uploads_data:
+  qdrant_data:
+  ai_docs_data:
 
 networks:
   app_net:

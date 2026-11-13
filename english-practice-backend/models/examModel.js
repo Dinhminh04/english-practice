@@ -102,6 +102,66 @@ Exam.delete = async (id) => {
   return await db.execute(sql, [id]);
 };
 
+// Thêm cột shared_audio_url cho DB cũ (MySQL 8 không có ADD COLUMN IF NOT EXISTS)
+Exam.ensureSchema = async () => {
+  const [columns] = await db.query(
+    `SELECT COLUMN_NAME FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'exams' AND COLUMN_NAME = 'shared_audio_url'`
+  );
+  if (columns.length === 0) {
+    await db.query("ALTER TABLE exams ADD COLUMN shared_audio_url VARCHAR(255) NULL AFTER difficulty");
+  }
+};
+
+// Tạo đề thi cùng toàn bộ câu hỏi trong một transaction: lỗi giữa chừng thì không lưu gì
+Exam.createWithQuestions = async (examData, questions) => {
+  const connection = await db.getConnection();
+  try {
+    await connection.beginTransaction();
+
+    const [examResult] = await connection.query(
+      `INSERT INTO exams (title, description, exam_type, duration, difficulty, created_by, shared_audio_url, total_questions)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        examData.title,
+        examData.description,
+        examData.exam_type,
+        examData.duration,
+        examData.difficulty,
+        examData.created_by,
+        examData.shared_audio_url || null,
+        questions.length,
+      ]
+    );
+    const examId = examResult.insertId;
+
+    for (const q of questions) {
+      await connection.query(
+        `INSERT INTO questions (exam_id, question_type, question_text, question_order, audio_url, options, correct_answer, points)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          examId,
+          q.question_type,
+          q.question_text,
+          q.question_order,
+          q.audio_url || null,
+          JSON.stringify(q.options),
+          JSON.stringify(q.correct_answer),
+          q.points || 1,
+        ]
+      );
+    }
+
+    await connection.commit();
+    return examId;
+  } catch (err) {
+    await connection.rollback();
+    throw err;
+  } finally {
+    connection.release();
+  }
+};
+
 Exam.updateTotalQuestions = async (examId) => {
   const sql = `
     UPDATE exams e

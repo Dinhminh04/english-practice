@@ -1,5 +1,4 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const { ANALYSIS_FORMAT } = require("../utils/aiFormat");
+const { analyzeWrongAnswers } = require("../services/analysisChain");
 const {
   GrammarTopic,
   GrammarLesson,
@@ -881,50 +880,22 @@ exports.analyzeGrammarResult = async (req, res) => {
   }
 
   try {
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || "gemini-3.5-flash-lite" });
-
-    const incorrectAnswers = results
+    const items = results
       .map((result, index) => ({ ...result, ...quiz.exercises[index] }))
-      .filter((q) => !q.isCorrect);
-
-    if (incorrectAnswers.length === 0) {
-      return res.json({
-        analysis:
-          "Chúc mừng! Bạn đã trả lời đúng tất cả các câu hỏi. Không có gì cần phân tích thêm.",
+      .filter((q) => !q.isCorrect)
+      .map((q) => {
+        const isChoice = q.question_type === "multiple_choice";
+        return {
+          question: q.question_text,
+          userAnswer: isChoice ? q.options[q.userAnswer] : q.userAnswer,
+          correctAnswer: isChoice ? q.options[q.correctAnswer] : q.correctAnswer,
+        };
       });
-    }
 
-    const prompt = `
-      Bạn là một giáo viên tiếng Anh chuyên nghiệp. Hãy phân tích kết quả bài làm ngữ pháp của một học sinh và đưa ra nhận xét ngắn gọn bằng tiếng Việt, tập trung vào quy tắc ngữ pháp.
-      Dưới đây là danh sách các câu hỏi học sinh đã trả lời sai:
-
-      ${incorrectAnswers
-        .map((q, index) => {
-          const userAnswerText =
-            q.question_type === "multiple_choice"
-              ? q.options[q.userAnswer]
-              : q.userAnswer;
-          const correctAnswerText =
-            q.question_type === "multiple_choice"
-              ? q.options[q.correctAnswer]
-              : q.correctAnswer;
-          return `
-        Câu ${index + 1}:
-        - Đề bài: ${q.question_text}
-        - Câu trả lời của học sinh: "${userAnswerText}"
-        - Đáp án đúng: "${correctAnswerText}"
-      `;
-        })
-        .join(`\n`)}
-
-      ${ANALYSIS_FORMAT}
-    `;
-
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const analysis = await response.text();
-
+    const analysis = await analyzeWrongAnswers(
+      items,
+      "Đây là bài luyện ngữ pháp, hãy tập trung vào quy tắc ngữ pháp."
+    );
     res.json({ analysis });
   } catch (error) {
     console.error("Error analyzing grammar result with AI:", error);

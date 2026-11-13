@@ -123,6 +123,16 @@ const Sidebar = ({
                   <p>Quản lý người dùng</p>
                 </Link>
               </li>
+              <li
+                className={`nav-item ${
+                  location.pathname === "/ai-management" ? "active" : ""
+                }`}
+              >
+                <Link to={"/ai-management"} onClick={handleMenuItemClick}>
+                  <i className="fa-solid fa-robot"></i>
+                  <p>Quản lý AI</p>
+                </Link>
+              </li>
               {/* <li
                 className={`nav-item ${
                   location.pathname === "/speaking-practice" ? "active" : ""

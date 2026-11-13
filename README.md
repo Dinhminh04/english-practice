@@ -1,8 +1,8 @@
 # English Practice
 
-A full-stack English learning web app with grammar lessons, vocabulary flashcards, exams and a Gemini-powered AI tutor. The tutor is a LangChain agent that reads the app's own data: it knows each learner's progress, explains their exam mistakes and recommends what to study next.
+A full-stack English learning web app with grammar lessons, vocabulary flashcards, exams and a Gemini-powered AI tutor. The AI is built with LangChain (model I/O, chains, RAG, memory and an agent): the tutor reads the app's own data and teacher documents, cites its sources, knows each learner's progress and recommends what to study next.
 
-The whole stack (MySQL, Express API, React + Nginx) runs with one `docker compose up` command.
+The whole stack (MySQL, Qdrant, Express API, React + Nginx) runs with one `docker compose up` command.
 
 ## Table of Contents
 
@@ -41,9 +41,9 @@ Learners sign up with email (with email verification), or log in with Google / F
 
 **AI tutor (chat)**
 - Answers in Vietnamese using the app's real data: grammar lessons, flashcards, exams and the learner's own results.
+- Searches a knowledge base (RAG) of lessons, flashcards, exam questions and teacher PDFs, and cites the source, e.g. "Grammar Notes, page 2".
 - Finds weak areas, explains wrong exam answers and suggests the next lessons, with clickable links.
-- Lists the words due for review today (spaced repetition).
-- Chat history is saved, so the tutor remembers the conversation; learners can start, reopen and delete conversations.
+- Remembers long conversations: recent messages are kept and older ones are summarized automatically.
 
 **Learning analysis**
 - After each quiz or exam, the AI analyzes the result and lists the topics the learner is weak at.
@@ -51,7 +51,8 @@ Learners sign up with email (with email verification), or log in with Google / F
 
 **Admin dashboard**
 - Manage users, exams, grammar lessons and vocabulary
-- Upload audio and images for exam questions
+- Import an exam from a PDF: the AI extracts the questions (including listening parts) into a draft that the admin reviews before saving
+- AI knowledge page: upload PDF/TXT reference documents, rebuild the knowledge base and test questions with cited answers
 - Import and export lessons and flashcards as CSV files
 
 ## Tech Stack
@@ -60,25 +61,27 @@ Learners sign up with email (with email verification), or log in with Google / F
 |---|---|
 | Frontend | React 19, React Router 6, Bootstrap 5, Font Awesome, Chart.js, Axios |
 | Backend | Node.js, Express 5, Passport.js, JWT, bcrypt, Multer, Nodemailer |
-| Database | MySQL 8 (21 tables) |
-| AI | Google Gemini API (gemini-3.5-flash-lite), LangChain.js (agent, tool calling), Web Speech API |
+| Database | MySQL 8 (22 tables), Qdrant (vector database) |
+| AI | Google Gemini API (gemini-3.5-flash-lite, gemini-embedding-001), LangChain.js (agent, chains, RAG, memory), Zod, Web Speech API |
 | Deployment | Docker, Docker Compose, Nginx |
 
 ## Why These Technologies
 
 - **React:** the app has many interactive screens (flashcards, quizzes, timed exams, chat). Reusable components make them easier to build.
-- **Node.js + Express:** JavaScript on both frontend and backend. Express makes it simple to split 91 endpoints into routes, controllers and models.
+- **Node.js + Express:** JavaScript on both frontend and backend. Express makes it simple to split 101 endpoints into routes, controllers and models.
 - **MySQL:** users, lessons, questions, attempts and progress are closely related, so a relational database fits well.
 - **JWT + Passport.js:** JWT keeps the API stateless. Passport handles Google and Facebook login, and every login method ends with the same JWT.
 - **Gemini API:** powers speaking evaluation, the chat tutor and result analysis without training a custom model.
-- **LangChain (tool calling):** the tutor calls a set of read-only functions (search lessons, get my weaknesses, review my last exam...) instead of writing SQL. This keeps answers grounded in real data and limits what the AI can access.
+- **LangChain:** one framework for every AI feature: prompt templates and Zod structured output, chains for result analysis and PDF import, RAG with citations, chat memory, and an agent whose tools are read-only functions (search lessons, get my weaknesses...) instead of SQL. This keeps answers grounded in real data and limits what the AI can access.
+- **Qdrant:** a vector database for RAG search. It runs as one more container and filters by source (documents, lessons, flashcards, questions).
 - **Web Speech API:** converts speech to text in the browser for free, with no extra server.
 - **Multer + Nodemailer:** Multer handles file uploads (audio, images, CSV). Nodemailer sends account verification and password reset emails.
 - **Docker + Nginx:** the whole stack starts with one command. Nginx serves the React build and proxies `/api` and `/uploads` to the backend, so only port 80 is exposed.
 
 ## Challenges
 
-- **Reliable AI output.** The speaking prompt asks Gemini to return only JSON: scores (1–10) for fluency, grammar, vocabulary and pronunciation, an overall score and feedback. Gemini sometimes adds extra text, so the server extracts the part between the first `{` and the last `}` before parsing.
+- **Reliable AI output.** Speaking scores, result analysis and PDF import use Zod schemas with structured output instead of parsing free text. When analyzing mistakes, the code writes the correct answers itself and the AI only explains them, because the model sometimes copied the wrong answer.
+- **RAG ranking.** Exam questions that share keywords ("since", "for") outranked the teacher's notes. The retriever now searches each source group separately and merges the results; the answer only lists sources the model actually cited.
 - **User roles.** Each protected route uses an auth middleware (checks the JWT) followed by a role middleware. The app uses `user`, `admin` and `superadmin`; `teacher` and `student` exist in the database but are reserved for course enrollment.
 - **Progress across modules.** Grammar, vocabulary and exams each store their own attempts and progress. The schema had to support both the learner dashboard and the AI analysis.
 - **Listening exams.** Several questions often share one audio file, so the upload logic stores one shared audio file per exam instead of one per question.
@@ -159,7 +162,7 @@ Set `DB_PORT` in the backend `.env` if MySQL does not use port 3306.
 
 ## API Overview
 
-91 endpoints, grouped by module:
+101 endpoints, grouped by module:
 
 | Base path | Description |
 |---|---|
@@ -167,10 +170,10 @@ Set `DB_PORT` in the backend `.env` if MySQL does not use port 3306.
 | `/api/user` | Profile, change password, learning history, weak areas |
 | `/api/grammar` | Topics, lessons, exercises, practices, progress, CSV import / export |
 | `/api/vocabulary` | Collections, flashcards, questions, progress, CSV import / export |
-| `/api/exams` | Exam CRUD, questions with audio / images, submit, results, history, AI analysis |
+| `/api/exams` | Exam CRUD, questions with audio / images, AI import from PDF, submit, results, history, AI analysis |
 | `/api/speaking` | Random speaking topic, answer evaluation |
 | `/api/chat` | AI tutor chat, conversation history (list, messages, delete), voice feedback |
-| `/api/admin` | User management, statistics, premium status |
+| `/api/admin` | User management, statistics, AI knowledge base and reference documents |
 | `/api/health` | Health check |
 
 ## Project Structure
@@ -183,7 +186,7 @@ english-practice/
 │   ├── middleware/   # JWT auth and role checks
 │   ├── models/       # Database queries
 │   ├── routes/       # API routes
-│   ├── services/     # AI tutor: LangChain agent and its tools
+│   ├── services/     # LangChain: models, chains, RAG (Qdrant), memory, agent and its tools
 │   ├── utils/        # Email sender
 │   └── server.js     # Entry point
 ├── english-practice-frontend/   # React app (multi-stage Dockerfile + nginx.conf)
@@ -192,7 +195,7 @@ english-practice/
 │       ├── pages/        # AuthSuccess, VerifyEmail
 │       ├── routers/      # App routes
 │       └── api.js        # Axios instance
-├── docker-compose.yml           # MySQL + backend + Nginx
+├── docker-compose.yml           # MySQL + Qdrant + backend + Nginx
 ├── .env.example                 # MYSQL_ROOT_PASSWORD for Docker Compose
 └── db.sql                       # Database schema and sample data
 ```

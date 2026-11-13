@@ -16,6 +16,9 @@ const adminRoutes = require("./routes/adminRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const speakingRoutes = require("./routes/speakingRoutes"); // Thêm import
 const AiChat = require("./models/aiChatModel");
+const { Exam } = require("./models/examModel");
+const { initKnowledgeBase } = require("./services/knowledgeBase");
+const AiDocument = require("./models/aiDocumentModel");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -29,11 +32,27 @@ const PORT = process.env.PORT || 5000;
   "uploads/grammar/audio",
   "uploads/grammar/images",
   "uploads/grammar/temp",
+  "storage/ai-docs", // AI reference documents (not served publicly)
 ].forEach((dir) => fs.mkdirSync(path.join(__dirname, dir), { recursive: true }));
 
 // Create the AI chat tables if they do not exist yet
 AiChat.ensureTables().catch((err) =>
   console.error("Không tạo được bảng AI chat:", err.message)
+);
+
+// Add exams.shared_audio_url to databases created before the column existed
+Exam.ensureSchema().catch((err) =>
+  console.error("Không cập nhật được bảng exams:", err.message)
+);
+
+// Table for admin-uploaded AI documents
+AiDocument.ensureTable().catch((err) =>
+  console.error("Không tạo được bảng tài liệu AI:", err.message)
+);
+
+// Build the RAG knowledge base in Qdrant on first start (skipped when it already has data)
+initKnowledgeBase().catch((err) =>
+  console.error("Không khởi tạo được kho kiến thức AI:", err.message)
 );
 
 // Middleware

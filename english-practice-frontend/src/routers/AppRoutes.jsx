@@ -13,6 +13,7 @@ import ExamManagement from "../components/admin/ExamManagement";
 import GrammarManagement from "../components/admin/GrammarManagement";
 import VocabularyManagement from "../components/admin/VocabularyManagement";
 import UserManagement from "../components/admin/UserManagement";
+import AiKnowledgeManagement from "../components/admin/AiKnowledgeManagement";
 import ExamList from "../components/exam/ExamList";
 import ExamPreview from "../components/exam/ExamPreview";
 import ExamResult from "../components/exam/ExamResult";
@@ -222,6 +223,17 @@ function AppRoutes({
           isAuthenticated &&
           (userRole === "superadmin" || userRole === "admin") ? (
             <UserManagement handleLogout={handleLogout} />
+          ) : (
+            <Navigate to="/" />
+          )
+        }
+      />
+      <Route
+        path="/ai-management"
+        element={
+          isAuthenticated &&
+          (userRole === "superadmin" || userRole === "admin") ? (
+            <AiKnowledgeManagement handleLogout={handleLogout} />
           ) : (
             <Navigate to="/" />
           )

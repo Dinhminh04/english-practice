@@ -12,6 +12,7 @@
 
 # user uploads (folders are created on startup by server.js)
 /uploads/
+/storage/
 
 # misc
 npm-debug.log*

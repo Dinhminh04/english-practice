@@ -27,6 +27,24 @@ const MarkdownLink = ({ href = "", children }) =>
     </a>
   );
 
+// Tên dễ hiểu cho các tool mà trợ lý AI đã dùng (hiện dưới câu trả lời)
+const TOOL_LABELS = {
+  search_knowledge: "kho kiến thức",
+  search_grammar_lessons: "bài ngữ pháp",
+  get_grammar_lesson: "bài ngữ pháp",
+  search_vocabulary: "từ vựng",
+  list_vocabulary_collections: "bộ từ vựng",
+  list_exams: "đề thi",
+  get_my_progress: "tiến độ học",
+  get_my_weaknesses: "điểm yếu",
+  review_exam_result: "kết quả bài thi",
+  get_learning_suggestions: "gợi ý học tập",
+  get_vocabulary_due_for_review: "từ cần ôn",
+};
+
+const toolSummary = (tools = []) =>
+  [...new Set(tools.map((t) => TOOL_LABELS[t]).filter(Boolean))].join(", ");
+
 const ChatAI = () => {
   // Trạng thái của chat bot
   const [isOpen, setIsOpen] = useState(false);
@@ -118,7 +136,11 @@ const ChatAI = () => {
         message: text,
         conversation_id: conversationId,
       });
-      const aiMessage = { text: response.data.reply, sender: "ai" };
+      const aiMessage = {
+        text: response.data.reply,
+        sender: "ai",
+        tools: toolSummary(response.data.tools_used),
+      };
       setMessages((prev) => [...prev, aiMessage]);
       if (response.data.conversation_id !== conversationId) {
         setConversationId(response.data.conversation_id);
@@ -351,7 +373,14 @@ const ChatAI = () => {
             {messages.map((msg, index) => (
               <div key={index} className={`message ${msg.sender}`}>
                 {msg.sender === "ai" ? (
-                  <Markdown components={{ a: MarkdownLink }}>{msg.text}</Markdown>
+                  <>
+                    <Markdown components={{ a: MarkdownLink }}>{msg.text}</Markdown>
+                    {msg.tools && (
+                      <div className="chat-ai-tools">
+                        <i className="fa-solid fa-magnifying-glass"></i> Đã tra cứu: {msg.tools}
+                      </div>
+                    )}
+                  </>
                 ) : (
                   msg.text
                 )}
