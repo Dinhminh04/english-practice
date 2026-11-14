@@ -218,7 +218,8 @@ const VocabularyFlashcard = {
       flashcard.display_order || 0,
     ]);
 
-    const [result] = await pool.execute(sql, [values]);
+    // Bulk "VALUES ?" needs query(): execute() uses prepared statements, which cannot expand a nested array
+    const [result] = await pool.query(sql, [values]);
     return result;
   },
 
