@@ -186,9 +186,10 @@ english-practice/
 │   ├── middleware/   # JWT auth and role checks
 │   ├── models/       # Database queries
 │   ├── routes/       # API routes
-│   ├── services/     # LangChain: models, chains, RAG (Qdrant), memory, agent and its tools
-│   ├── utils/        # Email sender
+│   ├── services/     # Business logic + LangChain: models, chains, RAG (Qdrant), memory, agent
+│   ├── utils/        # Email sender, request field parsing
 │   └── server.js     # Entry point
+├── .claude/skills/              # Claude Code skills: run and verify, safe refactor, add AI feature, security check
 ├── english-practice-frontend/   # React app (multi-stage Dockerfile + nginx.conf)
 │   └── src/
 │       ├── components/   # grammar, vocabulary, exam, speaking, admin, layout, ChatAI
@@ -199,6 +200,8 @@ english-practice/
 ├── .env.example                 # MYSQL_ROOT_PASSWORD for Docker Compose
 └── db.sql                       # Database schema and sample data
 ```
+
+The project was built with Claude Code as an AI pair programmer. The repeatable workflows (running and verifying the stack, refactoring with before/after API snapshots, adding LangChain features, security review) are packaged as [Agent Skills](.claude/skills/) so the AI follows the same checks every time.
 
 ## Future Features
 

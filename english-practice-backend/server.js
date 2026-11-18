@@ -69,7 +69,7 @@ app.use(express.urlencoded({ extended: true }));
 // Session middleware
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "mysupersecretkey123",
+    secret: process.env.SESSION_SECRET, // no fallback: a missing secret must fail at startup
     resave: false,
     saveUninitialized: false,
     cookie: {
